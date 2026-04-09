@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MotoIndia — Ride Without Borders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --card: #161616;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0ece3;
+    --muted: #7a7570;
+    --accent: #e8521a;
+    --accent2: #f0892a;
+    --accent-dim: rgba(232,82,26,0.12);
+    --accent-border: rgba(232,82,26,0.35);
+    --gold: #c8a96e;
+    --gold-dim: rgba(200,169,110,0.12);
+    --green: #3a8a5c;
+    --green-dim: rgba(58,138,92,0.12);
+    --teal: #1e9da8;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 0.5px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 64px;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--accent); color: var(--white);
+    border: none; padding: 0.5rem 1.2rem;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; border-radius: 2px; transition: background 0.2s;
+    text-decoration: none;
+  }
+  .nav-cta:hover { background: var(--accent2); }
+  .nav-mobile-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.4rem; cursor: pointer; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    position: relative; overflow: hidden;
+    padding: 0 2rem 5rem;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      linear-gradient(180deg, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.85) 70%, var(--bg) 100%),
+      radial-gradient(ellipse 80% 60% at 60% 40%, rgba(232,82,26,0.08) 0%, transparent 70%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 900px; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--accent-dim); border: 0.5px solid var(--accent-border);
+    padding: 0.3rem 0.8rem; border-radius: 2px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+  }
+  .hero-tag-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s ease infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(0.7);} }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 12vw, 9rem);
+    line-height: 0.9; letter-spacing: 0.02em;
+    color: var(--text); margin-bottom: 0.5rem;
+  }
+  .hero-title em { color: var(--accent); font-style: normal; }
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: var(--muted); max-width: 540px;
+    margin-bottom: 2.5rem; line-height: 1.5;
+  }
+  .hero-sub strong { color: var(--text); font-weight: 700; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 4rem; }
+  .btn-primary {
+    background: var(--accent); color: var(--white);
+    border: none; padding: 0.8rem 2rem;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; border-radius: 2px; transition: all 0.2s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent; color: var(--text);
+    border: 0.5px solid var(--border2); padding: 0.8rem 2rem;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; border-radius: 2px; transition: all 0.2s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .hero-stats {
+    display: flex; gap: 3rem;
+    border-top: 0.5px solid var(--border);
+    padding-top: 2rem;
+  }
+  .hero-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem; color: var(--text);
+    line-height: 1; letter-spacing: 0.05em;
+  }
+  .hero-stat-num span { color: var(--accent); }
+  .hero-stat-label { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.2rem; }
+
+  .hero-scroll {
+    position: absolute; right: 3rem; bottom: 4rem; z-index: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    color: var(--muted); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px; height: 60px; background: linear-gradient(var(--muted), transparent);
+    animation: scrollLine 2s ease infinite;
+  }
+  @keyframes scrollLine { 0%,100%{opacity:0;transform:scaleY(0);transform-origin:top;} 50%{opacity:1;transform:scaleY(1);} }
+
+  /* ── SECTION COMMONS ── */
+  section { padding: 6rem 2rem; }
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1rem;
+  }
+  .section-tag::before { content:''; display:block; width:20px; height:1px; background:var(--accent); }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1; letter-spacing: 0.03em; color: var(--text);
+  }
+  .section-title em { color: var(--accent); font-style: normal; }
+  .section-desc { color: var(--muted); max-width: 560px; margin-top: 0.8rem; font-size: 0.95rem; line-height: 1.7; }
+  .max-w { max-width: 1200px; margin: 0 auto; }
+
+  /* ── ROUTES / TRIPS ── */
+  #routes { background: var(--bg); }
+  .routes-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+  .routes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; }
+  .route-card {
+    position: relative; overflow: hidden; aspect-ratio: 4/5; cursor: pointer;
+    background: var(--card);
+    transition: all 0.4s;
+  }
+  .route-card:first-child { grid-row: span 2; aspect-ratio: auto; }
+  .route-card-bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    transition: transform 0.6s; filter: brightness(0.5) saturate(0.8);
+  }
+  .route-card:hover .route-card-bg { transform: scale(1.06); filter: brightness(0.65) saturate(1); }
+  .route-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.9) 100%);
+  }
+  .route-card-content {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 1.5rem;
+  }
+  .route-tag {
+    display: inline-block; background: var(--accent);
+    color: white; font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.25rem 0.6rem; border-radius: 1px; margin-bottom: 0.6rem;
+  }
+  .route-tag.gold { background: var(--gold); color: #1a1000; }
+  .route-tag.green { background: var(--green); }
+  .route-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; line-height: 1; letter-spacing: 0.04em; color: white; margin-bottom: 0.4rem; }
+  .route-card:first-child .route-card-title { font-size: 2.8rem; }
+  .route-meta { display: flex; gap: 1rem; font-size: 0.72rem; color: rgba(255,255,255,0.6); font-family: 'Space Mono', monospace; }
+  .route-card-hover {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(232,82,26,0.1);
+    border: 2px solid var(--accent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .route-card:hover .route-card-hover { opacity: 1; }
+  .view-route-btn {
+    background: var(--accent); color: white;
+    padding: 0.6rem 1.4rem; font-weight: 700; font-size: 0.8rem;
+    letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px;
+    text-decoration: none;
+  }
+
+  /* gradient placeholders for route images */
+  .rg1 { background: linear-gradient(135deg, #1a2a3a 0%, #2d4a2d 50%, #3a3020 100%); }
+  .rg2 { background: linear-gradient(135deg, #0d1f3a 0%, #1a3a5c 50%, #0a2a1a 100%); }
+  .rg3 { background: linear-gradient(135deg, #3a1a0a 0%, #5c2a10 50%, #2a1505 100%); }
+  .rg4 { background: linear-gradient(135deg, #1a0a2a 0%, #3a1a5c 50%, #1a2a3a 100%); }
+  .rg5 { background: linear-gradient(135deg, #0a2a0a 0%, #1a4a1a 50%, #2a3a10 100%); }
+
+  /* ── GEAR / ESSENTIALS ── */
+  #gear { background: var(--bg2); }
+  .gear-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 3rem; }
+  .gear-card {
+    background: var(--card); padding: 2rem 1.5rem;
+    border: 0.5px solid var(--border);
+    transition: border-color 0.2s, background 0.2s; cursor: pointer;
+  }
+  .gear-card:hover { border-color: var(--accent-border); background: var(--bg3); }
+  .gear-icon {
+    width: 48px; height: 48px; margin-bottom: 1.2rem;
+    background: var(--accent-dim); border: 0.5px solid var(--accent-border);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+  }
+  .gear-title { font-weight: 700; font-size: 0.95rem; color: var(--text); margin-bottom: 0.4rem; }
+  .gear-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── ROUTE PLANNER ── */
+  #planner { background: var(--bg); }
+  .planner-wrap {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-top: 3rem;
+  }
+  .planner-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .form-input, .form-select {
+    background: var(--card); border: 0.5px solid var(--border2);
+    color: var(--text); padding: 0.75rem 1rem;
+    font-family: 'Syne', sans-serif; font-size: 0.9rem;
+    border-radius: 2px; outline: none; transition: border-color 0.2s;
+    appearance: none;
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--accent); }
+  .form-input::placeholder { color: var(--muted); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .planner-map {
+    background: var(--card); border: 0.5px solid var(--border);
+    border-radius: 4px; height: 420px; display: flex; flex-direction: column;
+    overflow: hidden; position: relative;
+  }
+  .map-header { background: var(--bg3); padding: 0.8rem 1rem; border-bottom: 0.5px solid var(--border); display: flex; gap: 0.5rem; }
+  .map-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .map-body { flex: 1; position: relative; overflow: hidden; }
+  .india-map-svg { width: 100%; height: 100%; }
+
+  /* ── BLOG ── */
+  #blog { background: var(--bg2); }
+  .blog-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1.5px; margin-top: 3rem; }
+  .blog-card {
+    background: var(--card); border: 0.5px solid var(--border);
+    overflow: hidden; cursor: pointer; transition: border-color 0.2s;
+  }
+  .blog-card:hover { border-color: var(--accent-border); }
+  .blog-thumb { height: 200px; background: var(--bg3); position: relative; overflow: hidden; }
+  .blog-card:first-child .blog-thumb { height: 280px; }
+  .blog-thumb-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.5s; filter: brightness(0.7); }
+  .blog-card:hover .blog-thumb-bg { transform: scale(1.04); }
+  .blog-body { padding: 1.5rem; }
+  .blog-cat { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+  .blog-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; line-height: 1.1; color: var(--text); margin-bottom: 0.5rem; }
+  .blog-card:first-child .blog-title { font-size: 2rem; }
+  .blog-excerpt { font-size: 0.8rem; color: var(--muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .blog-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; font-size: 0.72rem; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+  /* blog thumb gradients */
+  .bg1 { background: linear-gradient(135deg, #0a2a1a 0%, #1a4a2a 100%); }
+  .bg2 { background: linear-gradient(135deg, #1a1a2a 0%, #2a1a3a 100%); }
+  .bg3 { background: linear-gradient(135deg, #2a1a0a 0%, #3a2a0a 100%); }
+
+  /* ── MAINTENANCE TRACKER ── */
+  #maintenance { background: var(--bg3); }
+  .maint-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 3rem; }
+  .maint-card { background: var(--card); border: 0.5px solid var(--border); padding: 1.5rem; border-radius: 2px; }
+  .maint-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .maint-icon { font-size: 1.2rem; }
+  .maint-status {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.2rem 0.6rem; border-radius: 1px;
+  }
+  .status-ok { background: var(--green-dim); color: var(--green); border: 0.5px solid rgba(58,138,92,0.3); }
+  .status-warn { background: rgba(200,169,110,0.12); color: var(--gold); border: 0.5px solid rgba(200,169,110,0.3); }
+  .status-due { background: var(--accent-dim); color: var(--accent); border: 0.5px solid var(--accent-border); }
+  .maint-title { font-weight: 700; font-size: 0.9rem; color: var(--text); margin-bottom: 0.3rem; }
+  .maint-val { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--muted); }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 1rem; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width 1s; }
+  .progress-fill.warn { background: var(--gold); }
+  .progress-fill.due { background: var(--accent); }
+
+  /* ── WEATHER ── */
+  #weather { background: var(--bg); }
+  .weather-strip {
+    display: flex; gap: 1px; margin-top: 3rem; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .weather-strip::-webkit-scrollbar { display: none; }
+  .weather-card {
+    flex: 1; min-width: 150px; background: var(--card);
+    border: 0.5px solid var(--border); padding: 1.5rem 1rem;
+    text-align: center; transition: border-color 0.2s;
+  }
+  .weather-card:hover { border-color: var(--accent-border); }
+  .weather-card.active { border-color: var(--accent); background: var(--accent-dim); }
+  .weather-city { font-size: 0.75rem; font-weight: 700; color: var(--text); letter-spacing: 0.08em; margin-bottom: 0.8rem; }
+  .weather-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .weather-temp { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--text); letter-spacing: 0.05em; }
+  .weather-temp span { color: var(--accent); }
+  .weather-cond { font-size: 0.7rem; color: var(--muted); margin-top: 0.3rem; }
+  .weather-warn { font-size: 0.65rem; color: var(--gold); margin-top: 0.5rem; font-style: italic; }
+
+  /* ── COMMUNITY ── */
+  #community { background: var(--bg2); }
+  .comm-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 3rem; }
+  .comm-card { background: var(--card); border: 0.5px solid var(--border); padding: 1.5rem; }
+  .comm-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: white; margin-bottom: 1rem; }
+  .comm-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+  .comm-handle { font-size: 0.7rem; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .comm-text { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-top: 0.8rem; }
+  .comm-route { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.8rem; font-size: 0.7rem; color: var(--accent); font-weight: 700; }
+
+  /* ── FUEL CALCULATOR ── */
+  #fuel { background: var(--bg3); }
+  .fuel-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-top: 3rem; }
+  .fuel-result { background: var(--card); border: 0.5px solid var(--border); padding: 2rem; }
+  .fuel-result-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 0.5px solid var(--border); }
+  .fuel-result-row:last-child { border-bottom: none; }
+  .fuel-result-label { font-size: 0.8rem; color: var(--muted); }
+  .fuel-result-val { font-family: 'Space Mono', monospace; font-weight: 700; color: var(--text); }
+  .fuel-result-total .fuel-result-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--accent); letter-spacing: 0.05em; }
+
+  /* ── EMERGENCY ── */
+  #emergency { background: var(--bg); }
+  .emg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 3rem; }
+  .emg-card {
+    background: var(--card); border: 0.5px solid var(--border); padding: 1.5rem;
+    border-radius: 2px; text-align: center;
+  }
+  .emg-num { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--accent); letter-spacing: 0.05em; }
+  .emg-title { font-weight: 700; font-size: 0.85rem; color: var(--text); margin: 0.4rem 0 0.2rem; }
+  .emg-desc { font-size: 0.75rem; color: var(--muted); }
+  .emg-banner {
+    margin-top: 1.5rem; background: rgba(232,82,26,0.08); border: 0.5px solid var(--accent-border);
+    padding: 1.5rem; border-radius: 2px; display: flex; align-items: center; gap: 1rem;
+  }
+  .emg-sos { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: var(--accent); letter-spacing: 0.1em; line-height: 1; }
+  .emg-sos-text { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+  .emg-sos-text strong { color: var(--text); }
+
+  /* ── GALLERY ── */
+  #gallery { background: var(--bg2); }
+  .gallery-mosaic { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 200px); gap: 2px; margin-top: 3rem; }
+  .gallery-item { background: var(--card); position: relative; overflow: hidden; cursor: pointer; }
+  .gallery-item.wide { grid-column: span 2; }
+  .gallery-item.tall { grid-row: span 2; }
+  .gallery-fill { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.5s, filter 0.3s; filter: brightness(0.6) saturate(0.8); }
+  .gallery-item:hover .gallery-fill { transform: scale(1.08); filter: brightness(0.85) saturate(1.2); }
+  .gallery-label { position: absolute; bottom: 0.8rem; left: 0.8rem; font-size: 0.7rem; font-weight: 700; color: rgba(255,255,255,0.7); letter-spacing: 0.1em; text-transform: uppercase; }
+  /* gallery gradient placeholders */
+  .gg1 { background: linear-gradient(45deg,#001a33,#003d1a); }
+  .gg2 { background: linear-gradient(135deg,#1a0a00,#3d1a00); }
+  .gg3 { background: linear-gradient(225deg,#00001a,#1a003d); }
+  .gg4 { background: linear-gradient(315deg,#001a1a,#003d3d); }
+  .gg5 { background: linear-gradient(90deg,#0a1a00,#2a3d00); }
+  .gg6 { background: linear-gradient(180deg,#1a000a,#3d001a); }
+  .gg7 { background: linear-gradient(270deg,#0a0a1a,#1a1a3d); }
+
+  /* ── CTA ── */
+  #cta { background: var(--bg); padding: 6rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  .cta-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(232,82,26,0.07) 0%, transparent 70%); }
+  .cta-content { position: relative; z-index: 1; }
+  .cta-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 8vw, 6rem); line-height: 1; color: var(--text); margin-bottom: 1rem; letter-spacing: 0.03em; }
+  .cta-title em { color: var(--accent); font-style: normal; }
+  .cta-sub { color: var(--muted); font-size: 1rem; max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.6; }
+  .cta-form { display: flex; max-width: 440px; margin: 0 auto; gap: 0; }
+  .cta-input {
+    flex: 1; background: var(--card); border: 0.5px solid var(--border2);
+    color: var(--text); padding: 0.85rem 1.2rem;
+    font-family: 'Syne', sans-serif; font-size: 0.9rem;
+    border-right: none; outline: none;
+  }
+  .cta-input::placeholder { color: var(--muted); }
+  .cta-submit { background: var(--accent); color: white; border: none; padding: 0.85rem 1.5rem; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+  .cta-submit:hover { background: var(--accent2); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg); border-top: 0.5px solid var(--border);
+    padding: 3rem 2rem; display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; max-width: 1200px; margin: 0 auto;
+  }
+  .footer-brand-name { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.08em; color: var(--text); margin-bottom: 0.5rem; }
+  .footer-brand-name span { color: var(--accent); }
+  .footer-tagline { font-size: 0.8rem; color: var(--muted); line-height: 1.6; max-width: 240px; }
+  .footer-col-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text); margin-bottom: 1rem; }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.83rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-bottom { grid-column: 1/-1; border-top: 0.5px solid var(--border); padding-top: 1.5rem; display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+  /* ── MOBILE NAV DRAWER ── */
+  .mobile-nav { display: none; position: fixed; inset: 0; z-index: 1000; background: var(--bg); flex-direction: column; justify-content: center; align-items: center; gap: 2rem; }
+  .mobile-nav.open { display: flex; }
+  .mobile-nav a { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.05em; color: var(--text); text-decoration: none; transition: color 0.2s; }
+  .mobile-nav a:hover { color: var(--accent); }
+  .mobile-close { position: absolute; top: 1.2rem; right: 1.5rem; background: none; border: none; color: var(--text); font-size: 2rem; cursor: pointer; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 1.2rem; }
+    .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .nav-mobile-btn { display: block; }
+    section { padding: 4rem 1.2rem; }
+    .routes-grid { grid-template-columns: 1fr 1fr; }
+    .route-card:first-child { grid-column: span 2; grid-row: span 1; aspect-ratio: 16/9; }
+    .gear-grid { grid-template-columns: 1fr 1fr; }
+    .maint-grid { grid-template-columns: 1fr 1fr; }
+    .emg-grid { grid-template-columns: 1fr 1fr; }
+    .planner-wrap { grid-template-columns: 1fr; }
+    .blog-grid { grid-template-columns: 1fr; }
+    .comm-grid { grid-template-columns: 1fr; }
+    .fuel-wrap { grid-template-columns: 1fr; }
+    .gallery-mosaic { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .gallery-item.wide { grid-column: span 2; }
+    .gallery-item.tall { grid-row: span 1; }
+    footer { grid-template-columns: 1fr 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+    .hero-scroll { display: none; }
+    .weather-strip { flex-wrap: nowrap; }
+  }
+  @media (max-width: 540px) {
+    .routes-grid { grid-template-columns: 1fr; }
+    .route-card:first-child { grid-column: span 1; aspect-ratio: 4/3; }
+    .gear-grid { grid-template-columns: 1fr; }
+    .maint-grid { grid-template-columns: 1fr; }
+    .emg-grid { grid-template-columns: 1fr 1fr; }
+    footer { grid-template-columns: 1fr; }
+    .cta-form { flex-direction: column; }
+    .cta-input { border-right: 0.5px solid var(--border2); border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#hero" class="nav-logo">Moto<span>India</span></a>
+  <ul class="nav-links">
+    <li><a href="#routes">Routes</a></li>
+    <li><a href="#gear">Gear</a></li>
+    <li><a href="#planner">Planner</a></li>
+    <li><a href="#blog">Journal</a></li>
+    <li><a href="#community">Community</a></li>
+    <li><a href="#emergency">Safety</a></li>
+  </ul>
+  <a href="#cta" class="nav-cta">Join the Ride</a>
+  <button class="nav-mobile-btn" id="navToggle">☰</button>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-close" id="navClose">✕</button>
+  <a href="#routes" onclick="closeMobileNav()">Routes</a>
+  <a href="#gear" onclick="closeMobileNav()">Gear</a>
+  <a href="#planner" onclick="closeMobileNav()">Planner</a>
+  <a href="#blog" onclick="closeMobileNav()">Journal</a>
+  <a href="#community" onclick="closeMobileNav()">Community</a>
+  <a href="#emergency" onclick="closeMobileNav()">Safety</a>
+</div>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">
+      <div class="hero-tag-dot"></div>
+      India's Premier Moto Travel Platform
+    </div>
+    <h1 class="hero-title">RIDE.<br>EXPLORE.<br><em>CONQUER.</em></h1>
+    <p class="hero-sub">The open road is calling. From <strong>Leh's frozen passes</strong> to <strong>Kerala's coastal curves</strong> — plan, track, and share your Indian bike odyssey.</p>
+    <div class="hero-btns">
+      <a href="#routes" class="btn-primary">▶ Explore Routes</a>
+      <a href="#planner" class="btn-outline">✦ Plan a Ride</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">2<span>4K+</span></div>
+        <div class="hero-stat-label">Riders on Platform</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">3<span>80+</span></div>
+        <div class="hero-stat-label">Curated Routes</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">2<span>.8M</span></div>
+        <div class="hero-stat-label">KMs Logged</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">2<span>9</span></div>
+        <div class="hero-stat-label">States Covered</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ── ROUTES ── -->
+<section id="routes">
+  <div class="max-w">
+    <div class="routes-header">
+      <div>
+        <div class="section-tag">Epic Journeys</div>
+        <h2 class="section-title">LEGENDARY <em>ROUTES</em></h2>
+        <p class="section-desc">Hand-picked motorcycle routes across India — from altitude-breaking Himalayan passes to sun-drenched coastal highways.</p>
+      </div>
+      <a href="#" class="btn-outline">View All 380+ Routes →</a>
+    </div>
+    <div class="routes-grid">
+      <div class="route-card">
+        <div class="route-card-bg rg1"></div>
+        <div class="route-card-overlay"></div>
+        <div class="route-card-content">
+          <div class="route-tag gold">★ Featured</div>
+          <div class="route-card-title">Manali–Leh Highway</div>
+          <div class="route-meta">
+            <span>470 km</span>
+            <span>7–9 Days</span>
+            <span>Advanced</span>
+          </div>
+        </div>
+        <div class="route-card-hover"><a href="#" class="view-route-btn">View Route</a></div>
+      </div>
+      <div class="route-card">
+        <div class="route-card-bg rg2"></div>
+        <div class="route-card-overlay"></div>
+        <div class="route-card-content">
+          <div class="route-tag">Coastal</div>
+          <div class="route-card-title">Konkan Coastal Cruise</div>
+          <div class="route-meta"><span>1,100 km</span><span>8 Days</span></div>
+        </div>
+        <div class="route-card-hover"><a href="#" class="view-route-btn">View Route</a></div>
+      </div>
+      <div class="route-card">
+        <div class="route-card-bg rg3"></div>
+        <div class="route-card-overlay"></div>
+        <div class="route-card-content">
+          <div class="route-tag green">Offroad</div>
+          <div class="route-card-title">Spiti Valley Circuit</div>
+          <div class="route-meta"><span>850 km</span><span>10 Days</span></div>
+        </div>
+        <div class="route-card-hover"><a href="#" class="view-route-btn">View Route</a></div>
+      </div>
+      <div class="route-card">
+        <div class="route-card-bg rg4"></div>
+        <div class="route-card-overlay"></div>
+        <div class="route-card-content">
+          <div class="route-tag">Highway</div>
+          <div class="route-card-title">Northeast Explorer</div>
+          <div class="route-meta"><span>2,200 km</span><span>14 Days</span></div>
+        </div>
+        <div class="route-card-hover"><a href="#" class="view-route-btn">View Route</a></div>
+      </div>
+      <div class="route-card">
+        <div class="route-card-bg rg5"></div>
+        <div class="route-card-overlay"></div>
+        <div class="route-card-content">
+          <div class="route-tag">Pilgrim</div>
+          <div class="route-card-title">Char Dham Circuit</div>
+          <div class="route-meta"><span>1,800 km</span><span>12 Days</span></div>
+        </div>
+        <div class="route-card-hover"><a href="#" class="view-route-btn">View Route</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GEAR ── -->
+<section id="gear">
+  <div class="max-w">
+    <div class="section-tag">Essential Gear</div>
+    <h2 class="section-title">PACK <em>SMART</em></h2>
+    <p class="section-desc">Everything a long-distance Indian moto-tourist needs — from high-altitude layers to monsoon-proof luggage. Curated by riders, for riders.</p>
+    <div class="gear-grid">
+      <div class="gear-card">
+        <div class="gear-icon">🪖</div>
+        <div class="gear-title">Helmet & Head Gear</div>
+        <div class="gear-desc">Full-face, modular, and adventure helmets. ISI/DOT certified for Indian road conditions.</div>
+      </div>
+      <div class="gear-card">
+        <div class="gear-icon">🧥</div>
+        <div class="gear-title">Riding Jackets</div>
+        <div class="gear-desc">CE-rated armor jackets — mesh for plains, insulated for Himalayas, waterproof for monsoon.</div>
+      </div>
+      <div class="gear-card">
+        <div class="gear-icon">🧤</div>
+        <div class="gear-title">Gloves & Protection</div>
+        <div class="gear-desc">Knuckle-guard gloves, knee pads, elbow guards and back protectors for all terrain types.</div>
+      </div>
+      <div class="gear-card">
+        <div class="gear-icon">👢</div>
+        <div class="gear-title">Riding Boots</div>
+        <div class="gear-desc">Waterproof ankle boots, adventure touring boots, and offroad enduro footwear options.</div>
+      </div>
+      <div class="gear-card">
+        <div class="gear-icon">🎒</div>
+        <div class="gear-title">Luggage & Panniers</div>
+        <div class="gear-desc">Soft saddlebags, hard panniers, tank bags, and dry bags for India's varied terrain.</div>
+      </div>
+      <div class="gear-card">
+        <div class="gear-icon">🔧</div>
+        <div class="gear-title">Tool Kit & Spares</div>
+        <div class="gear-desc">Compact tool rolls, puncture kits, spare levers, chain lubes and emergency spares list.</div>
+      </div>
+      <div class="gear-card">
+        <div class="gear-icon">📡</div>
+        <div class="gear-title">Navigation & Comms</div>
+        <div class="gear-desc">GPS mounts, Bluetooth intercoms, offline map apps and satellite communicators for remote routes.</div>
+      </div>
+      <div class="gear-card">
+        <div class="gear-icon">⚡</div>
+        <div class="gear-title">Electronics & Power</div>
+        <div class="gear-desc">USB chargers, power banks, action cameras, dashcams and USB-powered tyre inflators.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ROUTE PLANNER ── -->
+<section id="planner">
+  <div class="max-w">
+    <div class="section-tag">Route Planner</div>
+    <h2 class="section-title">PLAN YOUR <em>RIDE</em></h2>
+    <p class="section-desc">Calculate your route, estimate fuel, plan stops, and get a day-by-day itinerary for your next Indian moto adventure.</p>
+    <div class="planner-wrap">
+      <div>
+        <div class="planner-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Starting Point</label>
+              <input type="text" class="form-input" placeholder="e.g. Manali, HP" id="startPoint" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Destination</label>
+              <input type="text" class="form-input" placeholder="e.g. Leh, Ladakh" id="endPoint" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Bike Type</label>
+              <select class="form-select" id="bikeType">
+                <option>Royal Enfield Himalayan</option>
+                <option>RE Classic 350</option>
+                <option>RE Thunderbird</option>
+                <option>KTM Duke 390</option>
+                <option>Hero Xpulse 200</option>
+                <option>BMW G310 GS</option>
+                <option>Bajaj Dominar 400</option>
+                <option>Jawa Perak</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Travel Style</label>
+              <select class="form-select" id="travelStyle">
+                <option>Solo Rider</option>
+                <option>Group Ride</option>
+                <option>Couple Touring</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Start Date</label>
+              <input type="date" class="form-input" id="startDate" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Days Available</label>
+              <input type="number" class="form-input" placeholder="e.g. 10" min="1" max="60" id="daysAvail" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ride Preferences</label>
+            <select class="form-select" id="ridePrefs">
+              <option>Fastest Route</option>
+              <option>Most Scenic</option>
+              <option>Offroad Adventure</option>
+              <option>Coastal Highways</option>
+              <option>Avoid Highways</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Daily Km Target</label>
+            <input type="number" class="form-input" placeholder="e.g. 200" id="dailyKm" />
+          </div>
+          <button class="btn-primary" onclick="generatePlan()" style="margin-top:0.5rem;">✦ Generate Route Plan</button>
+        </div>
+        <div id="planOutput" style="margin-top:1.5rem;display:none;background:var(--card);border:0.5px solid var(--accent-border);padding:1.5rem;border-radius:2px;">
+          <div class="section-tag" style="margin-bottom:0.8rem;">Your Route Plan</div>
+          <div id="planContent" style="font-size:0.85rem;color:var(--muted);line-height:1.8;font-family:'Space Mono',monospace;"></div>
+        </div>
+      </div>
+      <div class="planner-map">
+        <div class="map-header">
+          <div class="map-dot" style="background:#e05050;"></div>
+          <div class="map-dot" style="background:#e0a050;"></div>
+          <div class="map-dot" style="background:#50c050;"></div>
+        </div>
+        <div class="map-body">
+          <svg class="india-map-svg" viewBox="0 0 400 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- India outline simplified -->
+            <path d="M155 30 L200 20 L230 35 L270 30 L290 50 L310 70 L320 100 L330 130 L320 150 L340 170 L350 200 L340 230 L320 260 L300 290 L270 320 L250 350 L230 370 L210 400 L200 430 L195 450 L190 440 L185 420 L175 400 L160 380 L145 360 L125 330 L105 300 L90 270 L80 240 L70 210 L75 180 L65 155 L60 130 L75 105 L90 80 L110 60 L135 40 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+            <!-- Kashmir/Ladakh top -->
+            <path d="M155 30 L170 15 L200 10 L225 20 L245 15 L265 25 L275 40 L265 50 L250 40 L230 35" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <!-- Major route line: Manali-Leh -->
+            <path d="M200 55 L215 45 L235 40 L255 48 L270 65" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3" stroke-linecap="round"/>
+            <!-- Route dots -->
+            <circle cx="200" cy="55" r="5" fill="var(--accent)"/>
+            <circle cx="270" cy="65" r="5" fill="var(--accent)"/>
+            <!-- Spiti route -->
+            <path d="M185 80 L200 70 L220 75 L240 85" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="3 3"/>
+            <!-- Konkan coastal -->
+            <path d="M140 200 L130 240 L120 280 L115 320 L120 340" stroke="#3a8a5c" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <!-- Northeast -->
+            <path d="M310 120 L330 110 L350 120 L360 140 L350 160" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="3 3"/>
+            <!-- Char Dham -->
+            <path d="M175 90 L185 80 L200 75 L210 85 L205 100" stroke="#c8a96e" stroke-width="1.5" stroke-dasharray="3 3"/>
+            <!-- City dots -->
+            <circle cx="195" cy="130" r="3" fill="rgba(255,255,255,0.4)"/>
+            <circle cx="160" cy="180" r="3" fill="rgba(255,255,255,0.4)"/>
+            <circle cx="200" cy="200" r="3" fill="rgba(255,255,255,0.4)"/>
+            <circle cx="240" cy="160" r="3" fill="rgba(255,255,255,0.4)"/>
+            <circle cx="150" cy="280" r="3" fill="rgba(255,255,255,0.4)"/>
+            <circle cx="200" cy="290" r="3" fill="rgba(255,255,255,0.4)"/>
+            <circle cx="270" cy="240" r="3" fill="rgba(255,255,255,0.4)"/>
+            <circle cx="175" cy="390" r="3" fill="rgba(255,255,255,0.3)"/>
+            <!-- Labels -->
+            <text x="205" y="53" fill="rgba(255,255,255,0.6)" font-size="7" font-family="Space Mono,monospace">Manali</text>
+            <text x="272" y="62" fill="rgba(255,255,255,0.6)" font-size="7" font-family="Space Mono,monospace">Leh</text>
+            <text x="198" y="200" fill="rgba(255,255,255,0.4)" font-size="7" font-family="Space Mono,monospace">Delhi</text>
+            <text x="148" y="290" fill="rgba(255,255,255,0.4)" font-size="7" font-family="Space Mono,monospace">Mumbai</text>
+            <text x="270" y="250" fill="rgba(255,255,255,0.4)" font-size="7" font-family="Space Mono,monospace">Kolkata</text>
+            <text x="172" y="400" fill="rgba(255,255,255,0.4)" font-size="7" font-family="Space Mono,monospace">Chennai</text>
+            <!-- Legend -->
+            <rect x="10" y="400" width="110" height="70" rx="2" fill="rgba(0,0,0,0.5)" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+            <line x1="18" y1="415" x2="34" y2="415" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
+            <text x="38" y="419" fill="rgba(255,255,255,0.5)" font-size="7" font-family="Space Mono,monospace">Himalayan</text>
+            <line x1="18" y1="430" x2="34" y2="430" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3 3"/>
+            <text x="38" y="434" fill="rgba(255,255,255,0.5)" font-size="7" font-family="Space Mono,monospace">Spiti</text>
+            <line x1="18" y1="445" x2="34" y2="445" stroke="#3a8a5c" stroke-width="2" stroke-dasharray="4 3"/>
+            <text x="38" y="449" fill="rgba(255,255,255,0.5)" font-size="7" font-family="Space Mono,monospace">Coastal</text>
+            <line x1="18" y1="460" x2="34" y2="460" stroke="var(--teal)" stroke-width="2" stroke-dasharray="3 3"/>
+            <text x="38" y="464" fill="rgba(255,255,255,0.5)" font-size="7" font-family="Space Mono,monospace">Northeast</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MAINTENANCE TRACKER ── -->
+<section id="maintenance">
+  <div class="max-w">
+    <div class="section-tag">Bike Health</div>
+    <h2 class="section-title">MAINTENANCE <em>TRACKER</em></h2>
+    <p class="section-desc">Never miss a service interval on the road. Track your bike's vitals and get notified when maintenance is due.</p>
+    <div class="maint-grid">
+      <div class="maint-card">
+        <div class="maint-card-header">
+          <span class="maint-icon">🛢️</span>
+          <span class="maint-status status-due">Due Now</span>
+        </div>
+        <div class="maint-title">Engine Oil</div>
+        <div class="maint-val">Last: 3,200 km ago · Due: 3,000 km</div>
+        <div class="progress-bar"><div class="progress-fill due" style="width:107%;"></div></div>
+      </div>
+      <div class="maint-card">
+        <div class="maint-card-header">
+          <span class="maint-icon">⛓️</span>
+          <span class="maint-status status-warn">Soon</span>
+        </div>
+        <div class="maint-title">Chain Lubrication</div>
+        <div class="maint-val">Last: 400 km ago · Due: 500 km</div>
+        <div class="progress-bar"><div class="progress-fill warn" style="width:80%;"></div></div>
+      </div>
+      <div class="maint-card">
+        <div class="maint-card-header">
+          <span class="maint-icon">🔩</span>
+          <span class="maint-status status-ok">Good</span>
+        </div>
+        <div class="maint-title">Air Filter</div>
+        <div class="maint-val">Last: 1,200 km ago · Due: 6,000 km</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:20%;"></div></div>
+      </div>
+      <div class="maint-card">
+        <div class="maint-card-header">
+          <span class="maint-icon">🛞</span>
+          <span class="maint-status status-warn">Check Soon</span>
+        </div>
+        <div class="maint-title">Tyre Pressure</div>
+        <div class="maint-val">Front: 28 psi · Rear: 32 psi</div>
+        <div class="progress-bar"><div class="progress-fill warn" style="width:65%;"></div></div>
+      </div>
+      <div class="maint-card">
+        <div class="maint-card-header">
+          <span class="maint-icon">🔋</span>
+          <span class="maint-status status-ok">Healthy</span>
+        </div>
+        <div class="maint-title">Battery</div>
+        <div class="maint-val">Voltage: 12.7V · Age: 14 months</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:45%;"></div></div>
+      </div>
+      <div class="maint-card">
+        <div class="maint-card-header">
+          <span class="maint-icon">🛑</span>
+          <span class="maint-status status-ok">Good</span>
+        </div>
+        <div class="maint-title">Brake Pads</div>
+        <div class="maint-val">Front: 60% · Rear: 75%</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:60%;"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WEATHER ── -->
+<section id="weather">
+  <div class="max-w">
+    <div class="section-tag">Riding Conditions</div>
+    <h2 class="section-title">WEATHER <em>WATCH</em></h2>
+    <p class="section-desc">Real-time riding condition alerts for popular moto routes across India — plan around the monsoons, snowfall, and heatwaves.</p>
+    <div class="weather-strip">
+      <div class="weather-card active">
+        <div class="weather-city">Manali</div>
+        <div class="weather-icon">🌨️</div>
+        <div class="weather-temp">4<span>°C</span></div>
+        <div class="weather-cond">Snow possible</div>
+        <div class="weather-warn">⚠ Check Rohtang Pass</div>
+      </div>
+      <div class="weather-card">
+        <div class="weather-city">Leh</div>
+        <div class="weather-icon">☀️</div>
+        <div class="weather-temp">12<span>°C</span></div>
+        <div class="weather-cond">Clear & sunny</div>
+        <div class="weather-warn">Ideal riding day</div>
+      </div>
+      <div class="weather-card">
+        <div class="weather-city">Spiti</div>
+        <div class="weather-icon">🌬️</div>
+        <div class="weather-temp">-2<span>°C</span></div>
+        <div class="weather-cond">High winds</div>
+        <div class="weather-warn">⚠ Kunzum Pass closed</div>
+      </div>
+      <div class="weather-card">
+        <div class="weather-city">Goa</div>
+        <div class="weather-icon">⛅</div>
+        <div class="weather-temp">30<span>°C</span></div>
+        <div class="weather-cond">Partly cloudy</div>
+        <div class="weather-warn">Great coastal ride</div>
+      </div>
+      <div class="weather-card">
+        <div class="weather-city">Sikkim</div>
+        <div class="weather-icon">🌧️</div>
+        <div class="weather-temp">14<span>°C</span></div>
+        <div class="weather-cond">Heavy rain</div>
+        <div class="weather-warn">⚠ Landslide risk</div>
+      </div>
+      <div class="weather-card">
+        <div class="weather-city">Rajasthan</div>
+        <div class="weather-icon">🔆</div>
+        <div class="weather-temp">38<span>°C</span></div>
+        <div class="weather-cond">Hot & dry</div>
+        <div class="weather-warn">Hydrate frequently</div>
+      </div>
+      <div class="weather-card">
+        <div class="weather-city">Coorg</div>
+        <div class="weather-icon">🌦️</div>
+        <div class="weather-temp">22<span>°C</span></div>
+        <div class="weather-cond">Misty morning</div>
+        <div class="weather-warn">Perfect riding weather</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FUEL CALCULATOR ── -->
+<section id="fuel">
+  <div class="max-w">
+    <div class="section-tag">Trip Calculator</div>
+    <h2 class="section-title">FUEL & <em>BUDGET</em></h2>
+    <p class="section-desc">Estimate total trip cost — fuel, accommodation, toll, food, and emergency funds — for your ride across India.</p>
+    <div class="fuel-wrap">
+      <div class="planner-form">
+        <div class="form-group">
+          <label class="form-label">Total Distance (km)</label>
+          <input type="number" class="form-input" id="fDist" value="800" oninput="calcFuel()" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bike Mileage (km/L)</label>
+          <input type="number" class="form-input" id="fMileage" value="28" oninput="calcFuel()" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fuel Price (₹/L)</label>
+          <input type="number" class="form-input" id="fPrice" value="103" oninput="calcFuel()" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">No. of Days</label>
+          <input type="number" class="form-input" id="fDays" value="7" oninput="calcFuel()" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Accommodation per Night (₹)</label>
+          <input type="number" class="form-input" id="fAccom" value="800" oninput="calcFuel()" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Food Budget per Day (₹)</label>
+          <input type="number" class="form-input" id="fFood" value="400" oninput="calcFuel()" />
+        </div>
+      </div>
+      <div class="fuel-result">
+        <div class="section-tag" style="margin-bottom:1rem;">Estimated Budget</div>
+        <div class="fuel-result-row">
+          <span class="fuel-result-label">Fuel Required</span>
+          <span class="fuel-result-val" id="rLitres">28.6 L</span>
+        </div>
+        <div class="fuel-result-row">
+          <span class="fuel-result-label">Fuel Cost</span>
+          <span class="fuel-result-val" id="rFuelCost">₹2,945</span>
+        </div>
+        <div class="fuel-result-row">
+          <span class="fuel-result-label">Accommodation</span>
+          <span class="fuel-result-val" id="rAccom">₹5,600</span>
+        </div>
+        <div class="fuel-result-row">
+          <span class="fuel-result-label">Food</span>
+          <span class="fuel-result-val" id="rFood">₹2,800</span>
+        </div>
+        <div class="fuel-result-row">
+          <span class="fuel-result-label">Toll + Misc (est.)</span>
+          <span class="fuel-result-val" id="rMisc">₹800</span>
+        </div>
+        <div class="fuel-result-row">
+          <span class="fuel-result-label">Emergency Buffer (15%)</span>
+          <span class="fuel-result-val" id="rBuffer">₹1,822</span>
+        </div>
+        <div class="fuel-result-row fuel-result-total">
+          <span class="fuel-result-label" style="font-weight:700;color:var(--text);">Total Estimate</span>
+          <span class="fuel-result-val" id="rTotal">₹13,967</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BLOG ── -->
+<section id="blog">
+  <div class="max-w">
+    <div class="routes-header">
+      <div>
+        <div class="section-tag">Rider's Journal</div>
+        <h2 class="section-title">TALES FROM <em>THE ROAD</em></h2>
+      </div>
+      <a href="#" class="btn-outline">All Stories →</a>
+    </div>
+    <div class="blog-grid">
+      <div class="blog-card">
+        <div class="blog-thumb">
+          <div class="blog-thumb-bg bg1"></div>
+        </div>
+        <div class="blog-body">
+          <div class="blog-cat">Adventure · Ladakh</div>
+          <div class="blog-title">Solo at 18,380 Feet: Crossing Khardung La on a 350cc</div>
+          <div class="blog-excerpt">Nothing prepares you for the air thinning as you wind past prayer flags and frozen waterfalls. The engine coughs. Your heart pounds. And then — the summit.</div>
+          <div class="blog-meta">
+            <span>Rahul Sharma</span>
+            <span>12 MIN READ</span>
+          </div>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-thumb">
+          <div class="blog-thumb-bg bg2"></div>
+        </div>
+        <div class="blog-body">
+          <div class="blog-cat">Guide · Gear</div>
+          <div class="blog-title">What I Carried for 45 Days Across India</div>
+          <div class="blog-excerpt">My complete packing list — refined over 3 Himalayan seasons of trial, error, and one very wet monsoon.</div>
+          <div class="blog-meta">
+            <span>Priya Menon</span>
+            <span>8 MIN READ</span>
+          </div>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-thumb">
+          <div class="blog-thumb-bg bg3"></div>
+        </div>
+        <div class="blog-body">
+          <div class="blog-cat">Culture · Northeast</div>
+          <div class="blog-title">The Roads Nobody Talks About: Nagaland on Two Wheels</div>
+          <div class="blog-excerpt">Breathtaking valleys, unexpected warmth of strangers, and roads that exist only on faith.</div>
+          <div class="blog-meta">
+            <span>Aniket Das</span>
+            <span>10 MIN READ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── COMMUNITY ── -->
+<section id="community">
+  <div class="max-w">
+    <div class="routes-header">
+      <div>
+        <div class="section-tag">Rider Community</div>
+        <h2 class="section-title">JOIN THE <em>TRIBE</em></h2>
+        <p class="section-desc">24,000+ riders sharing routes, tips, and road stories across India's most iconic highways.</p>
+      </div>
+      <a href="#" class="btn-outline">Join Community →</a>
+    </div>
+    <div class="comm-grid">
+      <div class="comm-card">
+        <div class="comm-avatar">RS</div>
+        <div class="comm-name">Rahul Sharma</div>
+        <div class="comm-handle">@moto_himalayan</div>
+        <div class="comm-text">"Just completed Manali-Leh solo in November. Roads were empty, mountains were surreal. The BRTF chai stalls kept me alive. Pro tip: carry extra fuel past Keylong."</div>
+        <div class="comm-route">📍 Manali → Leh · 480 km</div>
+      </div>
+      <div class="comm-card">
+        <div class="comm-avatar" style="background:var(--gold);color:#1a1000;">PM</div>
+        <div class="comm-name">Priya Menon</div>
+        <div class="comm-handle">@keralarides</div>
+        <div class="comm-text">"Rode the Konkan coast from Mumbai to Kanyakumari in 9 days. Every sunset was more dramatic than the last. The coastal food alone is worth the trip!"</div>
+        <div class="comm-route">📍 Mumbai → Kanyakumari · 1,850 km</div>
+      </div>
+      <div class="comm-card">
+        <div class="comm-avatar" style="background:var(--green);color:white;">AD</div>
+        <div class="comm-name">Aniket Das</div>
+        <div class="comm-handle">@northeast_roads</div>
+        <div class="comm-text">"Meghalaya and Nagaland changed my perspective on riding. No tourist crowds, no GPS signal, just you and the mist. Absolutely recommended for experienced riders."</div>
+        <div class="comm-route">📍 Guwahati → Kohima · 480 km</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EMERGENCY ── -->
+<section id="emergency">
+  <div class="max-w">
+    <div class="section-tag">Rider Safety</div>
+    <h2 class="section-title">EMERGENCY <em>CONTACTS</em></h2>
+    <p class="section-desc">Save these before every ride. Remote routes across India can leave you without signal — but preparation saves lives.</p>
+    <div class="emg-grid">
+      <div class="emg-card">
+        <div class="emg-num">112</div>
+        <div class="emg-title">National Emergency</div>
+        <div class="emg-desc">Police, Fire & Ambulance</div>
+      </div>
+      <div class="emg-card">
+        <div class="emg-num">1033</div>
+        <div class="emg-title">Highway Help</div>
+        <div class="emg-desc">NHAI Highway Helpline</div>
+      </div>
+      <div class="emg-card">
+        <div class="emg-num">14432</div>
+        <div class="emg-title">Road Accidents</div>
+        <div class="emg-desc">National Road Safety</div>
+      </div>
+      <div class="emg-card">
+        <div class="emg-num">01982</div>
+        <div class="emg-title">Ladakh BRO</div>
+        <div class="emg-desc">Border Roads Org Leh</div>
+      </div>
+    </div>
+    <div class="emg-banner">
+      <div class="emg-sos">SOS</div>
+      <div class="emg-sos-text">
+        <strong>Before every Himalayan or remote ride:</strong> File a route plan with a trusted contact. Carry a PLB (Personal Locator Beacon) or satellite communicator. Know the nearest BSNL tower location — other networks drop fast above 3,000m. Keep the State Disaster Management Authority number of each state you cross.
+      </div>
+    </div>
+    <div style="margin-top:2rem;">
+      <div class="section-tag" style="margin-bottom:1rem;">Pre-Ride Checklist</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.5rem;" id="checklist"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section id="gallery">
+  <div class="max-w">
+    <div class="routes-header" style="margin-bottom:2rem;">
+      <div>
+        <div class="section-tag">Visual Stories</div>
+        <h2 class="section-title">ROADS OF <em>INDIA</em></h2>
+      </div>
+      <a href="#" class="btn-outline">Submit Your Shot →</a>
+    </div>
+    <div class="gallery-mosaic">
+      <div class="gallery-item wide tall">
+        <div class="gallery-fill gg1"></div>
+        <div class="gallery-label">Khardung La Pass</div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-fill gg2"></div>
+        <div class="gallery-label">Spiti Valley</div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-fill gg3"></div>
+        <div class="gallery-label">Konkan Coast</div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-fill gg4"></div>
+        <div class="gallery-label">Zanskar Road</div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-fill gg5"></div>
+        <div class="gallery-label">Coorg Ghats</div>
+      </div>
+      <div class="gallery-item wide">
+        <div class="gallery-fill gg7"></div>
+        <div class="gallery-label">Tawang, Arunachal</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section id="cta">
+  <div class="cta-bg"></div>
+  <div class="max-w cta-content">
+    <div class="section-tag" style="justify-content:center;margin-bottom:1rem;">Join MotoIndia</div>
+    <h2 class="cta-title">YOUR NEXT RIDE<br><em>STARTS HERE</em></h2>
+    <p class="cta-sub">Get curated route alerts, weather warnings, and community ride invitations — straight to your inbox.</p>
+    <div class="cta-form">
+      <input type="email" class="cta-input" placeholder="your@email.com" />
+      <button class="cta-submit">Subscribe</button>
+    </div>
+    <p style="margin-top:1rem;font-size:0.72rem;color:var(--muted);font-family:'Space Mono',monospace;">24,000+ riders already onboard. No spam — only road stories.</p>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<div style="background:var(--bg);padding:0 2rem;">
+  <footer>
+    <div>
+      <div class="footer-brand-name">Moto<span>India</span></div>
+      <div class="footer-tagline">India's premier platform for motorcycle touring — built by riders, for riders. Ride Without Borders.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Explore</div>
+      <ul class="footer-links">
+        <li><a href="#">All Routes</a></li>
+        <li><a href="#">Route Planner</a></li>
+        <li><a href="#">Maps & GPX</a></li>
+        <li><a href="#">Offroad Trails</a></li>
+        <li><a href="#">Coastal Rides</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Resources</div>
+      <ul class="footer-links">
+        <li><a href="#">Gear Reviews</a></li>
+        <li><a href="#">Maintenance Tips</a></li>
+        <li><a href="#">Weather Guide</a></li>
+        <li><a href="#">Emergency Prep</a></li>
+        <li><a href="#">Permit Guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Community</div>
+      <ul class="footer-links">
+        <li><a href="#">Rider Stories</a></li>
+        <li><a href="#">Group Rides</a></li>
+        <li><a href="#">Photo Gallery</a></li>
+        <li><a href="#">Forum</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 MotoIndia. Made with ♥ on the open road.</span>
+      <span>Privacy · Terms · Sitemap</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+// Mobile Nav
+document.getElementById('navToggle').onclick = () => document.getElementById('mobileNav').classList.add('open');
+document.getElementById('navClose').onclick = () => document.getElementById('mobileNav').classList.remove('open');
+function closeMobileNav() { document.getElementById('mobileNav').classList.remove('open'); }
+
+// Fuel Calculator
+function calcFuel() {
+  const dist = parseFloat(document.getElementById('fDist').value) || 0;
+  const mileage = parseFloat(document.getElementById('fMileage').value) || 1;
+  const price = parseFloat(document.getElementById('fPrice').value) || 0;
+  const days = parseFloat(document.getElementById('fDays').value) || 0;
+  const accom = parseFloat(document.getElementById('fAccom').value) || 0;
+  const food = parseFloat(document.getElementById('fFood').value) || 0;
+
+  const litres = dist / mileage;
+  const fuelCost = litres * price;
+  const accomTotal = accom * days;
+  const foodTotal = food * days;
+  const misc = Math.round(dist * 1);
+  const sub = fuelCost + accomTotal + foodTotal + misc;
+  const buffer = sub * 0.15;
+  const total = sub + buffer;
+
+  document.getElementById('rLitres').textContent = litres.toFixed(1) + ' L';
+  document.getElementById('rFuelCost').textContent = '₹' + Math.round(fuelCost).toLocaleString('en-IN');
+  document.getElementById('rAccom').textContent = '₹' + Math.round(accomTotal).toLocaleString('en-IN');
+  document.getElementById('rFood').textContent = '₹' + Math.round(foodTotal).toLocaleString('en-IN');
+  document.getElementById('rMisc').textContent = '₹' + misc.toLocaleString('en-IN');
+  document.getElementById('rBuffer').textContent = '₹' + Math.round(buffer).toLocaleString('en-IN');
+  document.getElementById('rTotal').textContent = '₹' + Math.round(total).toLocaleString('en-IN');
+}
+calcFuel();
+
+// Route Planner
+function generatePlan() {
+  const start = document.getElementById('startPoint').value || 'Delhi';
+  const end = document.getElementById('endPoint').value || 'Leh';
+  const days = document.getElementById('daysAvail').value || '8';
+  const bike = document.getElementById('bikeType').value;
+  const daily = document.getElementById('dailyKm').value || '200';
+
+  const plan = `ROUTE: ${start} → ${end}
+DURATION: ${days} days
+BIKE: ${bike}
+DAILY TARGET: ~${daily} km
+
+DAY-BY-DAY PLAN:
+───────────────────────────────
+Day 1 : ${start} → Departure Point
+Day 2 : Mountain foothills entry
+Day 3 : Scenic valley crossing  
+Day 4 : Rest & acclimatize (if altitude)
+Day 5 : High altitude section
+Day 6 : Border/checkpoint zone
+Day 7 : Final push to ${end}
+Day 8 : Buffer / return departure
+
+MUST-CARRY:
+• RC, DL, Insurance papers
+• Aadhaar/Passport (border zones)
+• Permit if required (ILP/PAP)
+• Emergency contact card
+
+FUEL STOPS: Every 150–200 km max
+HOTELS: Book in advance — limited rooms
+CONNECTIVITY: BSNL SIM recommended`;
+
+  document.getElementById('planOutput').style.display = 'block';
+  document.getElementById('planContent').textContent = plan;
+  document.getElementById('planOutput').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Checklist
+const checkItems = [
+  'RC Book & DL', 'Bike Insurance', 'PUC Certificate', 'Aadhaar / Passport',
+  'Inner Line Permit (if req)', 'First Aid Kit', 'Puncture Repair Kit', 'Chain Lube',
+  'Spare Clutch Lever', 'Spare Brake Lever', 'Tow Rope', 'Bungee Cords',
+  'Offline Maps Downloaded', 'Emergency Contacts Saved', 'Satellite Beacon (remote)', 'Power Bank Charged'
+];
+const cl = document.getElementById('checklist');
+checkItems.forEach(item => {
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;align-items:center;gap:0.6rem;background:var(--card);border:0.5px solid var(--border);padding:0.7rem 1rem;border-radius:2px;cursor:pointer;transition:border-color 0.2s;';
+  div.innerHTML = `<div style="width:16px;height:16px;border:0.5px solid var(--border2);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.2s;" class="chk"></div><span style="font-size:0.8rem;color:var(--muted);">${item}</span>`;
+  let checked = false;
+  div.onclick = () => {
+    checked = !checked;
+    const chk = div.querySelector('.chk');
+    if(checked) {
+      chk.textContent = '✓';
+      chk.style.background = 'var(--green)';
+      chk.style.borderColor = 'var(--green)';
+      chk.style.color = 'white';
+      div.style.borderColor = 'rgba(58,138,92,0.3)';
+      div.querySelector('span').style.color = 'var(--text)';
+    } else {
+      chk.textContent = '';
+      chk.style.background = 'transparent';
+      chk.style.borderColor = 'var(--border2)';
+      div.style.borderColor = 'var(--border)';
+      div.querySelector('span').style.color = 'var(--muted)';
+    }
+  };
+  cl.appendChild(div);
+});
+
+// Smooth reveal on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('section').forEach(s => {
+  s.style.opacity = '0';
+  s.style.transform = 'translateY(24px)';
+  s.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(s);
+});
+// Show hero immediately
+document.getElementById('hero').style.opacity = '1';
+document.getElementById('hero').style.transform = 'none';
+</script>
+</body>
+</html>
