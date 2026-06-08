@@ -1,1360 +1,643 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RevX Nomad — Nishant Jambhulkar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --bg: #0a0a0a;
-    --bg2: #111111;
-    --bg3: #1a1a1a;
-    --card: #161616;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.14);
-    --text: #f0ece3;
-    --muted: #7a7570;
-    --accent: #e8521a;
-    --accent2: #f0892a;
-    --accent-dim: rgba(232,82,26,0.12);
-    --accent-border: rgba(232,82,26,0.35);
-    --gold: #c8a96e;
-    --gold-dim: rgba(200,169,110,0.12);
-    --green: #3a8a5c;
-    --green-dim: rgba(58,138,92,0.12);
-    --teal: #1e9da8;
-    --white: #ffffff;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* ── SCROLLBAR ── */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
-    background: rgba(10,10,10,0.85);
-    backdrop-filter: blur(16px);
-    border-bottom: 0.5px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 2rem; height: 64px;
-  }
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem;
-    letter-spacing: 0.08em;
-    color: var(--text);
-    text-decoration: none;
-  }
-  .nav-logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
-  .nav-links a {
-    color: var(--muted); text-decoration: none;
-    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em;
-    text-transform: uppercase; transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--text); }
-  .nav-cta {
-    background: var(--accent); color: var(--white);
-    border: none; padding: 0.5rem 1.2rem;
-    font-family: 'Syne', sans-serif; font-weight: 700;
-    font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
-    cursor: pointer; border-radius: 2px; transition: background 0.2s;
-    text-decoration: none;
-  }
-  .nav-cta:hover { background: var(--accent2); }
-  .nav-mobile-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.4rem; cursor: pointer; }
-
-  /* ── HERO ── */
-  #hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column; justify-content: flex-end;
-    position: relative; overflow: hidden;
-    padding: 0 2rem 5rem;
-  }
-  .hero-bg {
-    position: absolute; inset: 0; z-index: 0;
-    background:
-      linear-gradient(180deg, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.85) 70%, var(--bg) 100%),
-      radial-gradient(ellipse 80% 60% at 60% 40%, rgba(232,82,26,0.08) 0%, transparent 70%);
-  }
-  .hero-grid {
-    position: absolute; inset: 0; z-index: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-    background-size: 80px 80px;
-    mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
-  }
-  .hero-content { position: relative; z-index: 1; max-width: 900px; }
-  .hero-tag {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: var(--accent-dim); border: 0.5px solid var(--accent-border);
-    padding: 0.3rem 0.8rem; border-radius: 2px;
-    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em;
-    text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
-  }
-  .hero-tag-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s ease infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(0.7);} }
-  .hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(4rem, 12vw, 9rem);
-    line-height: 0.9; letter-spacing: 0.02em;
-    color: var(--text); margin-bottom: 0.5rem;
-  }
-  .hero-title em { color: var(--accent); font-style: normal; }
-  .hero-sub {
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    color: var(--muted); max-width: 540px;
-    margin-bottom: 2.5rem; line-height: 1.5;
-  }
-  .hero-sub strong { color: var(--text); font-weight: 700; }
-  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 4rem; }
-  .btn-primary {
-    background: var(--accent); color: var(--white);
-    border: none; padding: 0.8rem 2rem;
-    font-family: 'Syne', sans-serif; font-weight: 700;
-    font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
-    cursor: pointer; border-radius: 2px; transition: all 0.2s;
-    text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
-  }
-  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
-  .btn-outline {
-    background: transparent; color: var(--text);
-    border: 0.5px solid var(--border2); padding: 0.8rem 2rem;
-    font-family: 'Syne', sans-serif; font-weight: 700;
-    font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
-    cursor: pointer; border-radius: 2px; transition: all 0.2s;
-    text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
-  }
-  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-  .hero-stats {
-    display: flex; gap: 3rem;
-    border-top: 0.5px solid var(--border);
-    padding-top: 2rem;
-  }
-  .hero-stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.2rem; color: var(--text);
-    line-height: 1; letter-spacing: 0.05em;
-  }
-  .hero-stat-num span { color: var(--accent); }
-  .hero-stat-label { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.2rem; }
-
-  .hero-scroll {
-    position: absolute; right: 3rem; bottom: 4rem; z-index: 1;
-    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-    color: var(--muted); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
-  }
-  .scroll-line {
-    width: 1px; height: 60px; background: linear-gradient(var(--muted), transparent);
-    animation: scrollLine 2s ease infinite;
-  }
-  @keyframes scrollLine { 0%,100%{opacity:0;transform:scaleY(0);transform-origin:top;} 50%{opacity:1;transform:scaleY(1);} }
-
-  /* ── SECTION COMMONS ── */
-  section { padding: 6rem 2rem; }
-  .section-tag {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 1rem;
-  }
-  .section-tag::before { content:''; display:block; width:20px; height:1px; background:var(--accent); }
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    line-height: 1; letter-spacing: 0.03em; color: var(--text);
-  }
-  .section-title em { color: var(--accent); font-style: normal; }
-  .section-desc { color: var(--muted); max-width: 560px; margin-top: 0.8rem; font-size: 0.95rem; line-height: 1.7; }
-  .max-w { max-width: 1200px; margin: 0 auto; }
-
-  /* ── ROUTES / TRIPS ── */
-  #routes { background: var(--bg); }
-  .routes-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
-  .routes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; }
-  .route-card {
-    position: relative; overflow: hidden; aspect-ratio: 4/5; cursor: pointer;
-    background: var(--card);
-    transition: all 0.4s;
-  }
-  .route-card:first-child { grid-row: span 2; aspect-ratio: auto; }
-  .route-card-bg {
-    position: absolute; inset: 0;
-    background-size: cover; background-position: center;
-    transition: transform 0.6s; filter: brightness(0.5) saturate(0.8);
-  }
-  .route-card:hover .route-card-bg { transform: scale(1.06); filter: brightness(0.65) saturate(1); }
-  .route-card-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.9) 100%);
-  }
-  .route-card-content {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 1.5rem;
-  }
-  .route-tag {
-    display: inline-block; background: var(--accent);
-    color: white; font-size: 0.65rem; font-weight: 700;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    padding: 0.25rem 0.6rem; border-radius: 1px; margin-bottom: 0.6rem;
-  }
-  .route-tag.gold { background: var(--gold); color: #1a1000; }
-  .route-tag.green { background: var(--green); }
-  .route-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; line-height: 1; letter-spacing: 0.04em; color: white; margin-bottom: 0.4rem; }
-  .route-card:first-child .route-card-title { font-size: 2.8rem; }
-  .route-meta { display: flex; gap: 1rem; font-size: 0.72rem; color: rgba(255,255,255,0.6); font-family: 'Space Mono', monospace; }
-  .route-card-hover {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(232,82,26,0.1);
-    border: 2px solid var(--accent);
-    opacity: 0; transition: opacity 0.3s;
-  }
-  .route-card:hover .route-card-hover { opacity: 1; }
-  .view-route-btn {
-    background: var(--accent); color: white;
-    padding: 0.6rem 1.4rem; font-weight: 700; font-size: 0.8rem;
-    letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px;
-    text-decoration: none;
-  }
-
-  /* gradient placeholders for route images */
-  .rg1 { background: linear-gradient(135deg, #1a2a3a 0%, #2d4a2d 50%, #3a3020 100%); }
-  .rg2 { background: linear-gradient(135deg, #0d1f3a 0%, #1a3a5c 50%, #0a2a1a 100%); }
-  .rg3 { background: linear-gradient(135deg, #3a1a0a 0%, #5c2a10 50%, #2a1505 100%); }
-  .rg4 { background: linear-gradient(135deg, #1a0a2a 0%, #3a1a5c 50%, #1a2a3a 100%); }
-  .rg5 { background: linear-gradient(135deg, #0a2a0a 0%, #1a4a1a 50%, #2a3a10 100%); }
-
-  /* ── GEAR / ESSENTIALS ── */
-  #gear { background: var(--bg2); }
-  .gear-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 3rem; }
-  .gear-card {
-    background: var(--card); padding: 2rem 1.5rem;
-    border: 0.5px solid var(--border);
-    transition: border-color 0.2s, background 0.2s; cursor: pointer;
-  }
-  .gear-card:hover { border-color: var(--accent-border); background: var(--bg3); }
-  .gear-icon {
-    width: 48px; height: 48px; margin-bottom: 1.2rem;
-    background: var(--accent-dim); border: 0.5px solid var(--accent-border);
-    border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem;
-  }
-  .gear-title { font-weight: 700; font-size: 0.95rem; color: var(--text); margin-bottom: 0.4rem; }
-  .gear-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
-
-  /* ── ROUTE PLANNER ── */
-  #planner { background: var(--bg); }
-  .planner-wrap {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-top: 3rem;
-  }
-  .planner-form { display: flex; flex-direction: column; gap: 1rem; }
-  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-  .form-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-  .form-input, .form-select {
-    background: var(--card); border: 0.5px solid var(--border2);
-    color: var(--text); padding: 0.75rem 1rem;
-    font-family: 'Syne', sans-serif; font-size: 0.9rem;
-    border-radius: 2px; outline: none; transition: border-color 0.2s;
-    appearance: none;
-  }
-  .form-input:focus, .form-select:focus { border-color: var(--accent); }
-  .form-input::placeholder { color: var(--muted); }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .planner-map {
-    background: var(--card); border: 0.5px solid var(--border);
-    border-radius: 4px; height: 420px; display: flex; flex-direction: column;
-    overflow: hidden; position: relative;
-  }
-  .map-header { background: var(--bg3); padding: 0.8rem 1rem; border-bottom: 0.5px solid var(--border); display: flex; gap: 0.5rem; }
-  .map-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .map-body { flex: 1; position: relative; overflow: hidden; }
-  .india-map-svg { width: 100%; height: 100%; }
-
-  /* ── BLOG ── */
-  #blog { background: var(--bg2); }
-  .blog-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1.5px; margin-top: 3rem; }
-  .blog-card {
-    background: var(--card); border: 0.5px solid var(--border);
-    overflow: hidden; cursor: pointer; transition: border-color 0.2s;
-  }
-  .blog-card:hover { border-color: var(--accent-border); }
-  .blog-thumb { height: 200px; background: var(--bg3); position: relative; overflow: hidden; }
-  .blog-card:first-child .blog-thumb { height: 280px; }
-  .blog-thumb-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.5s; filter: brightness(0.7); }
-  .blog-card:hover .blog-thumb-bg { transform: scale(1.04); }
-  .blog-body { padding: 1.5rem; }
-  .blog-cat { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
-  .blog-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; line-height: 1.1; color: var(--text); margin-bottom: 0.5rem; }
-  .blog-card:first-child .blog-title { font-size: 2rem; }
-  .blog-excerpt { font-size: 0.8rem; color: var(--muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .blog-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; font-size: 0.72rem; color: var(--muted); font-family: 'Space Mono', monospace; }
-
-  /* blog thumb gradients */
-  .bg1 { background: linear-gradient(135deg, #0a2a1a 0%, #1a4a2a 100%); }
-  .bg2 { background: linear-gradient(135deg, #1a1a2a 0%, #2a1a3a 100%); }
-  .bg3 { background: linear-gradient(135deg, #2a1a0a 0%, #3a2a0a 100%); }
-
-  /* ── MAINTENANCE TRACKER ── */
-  #maintenance { background: var(--bg3); }
-  .maint-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 3rem; }
-  .maint-card { background: var(--card); border: 0.5px solid var(--border); padding: 1.5rem; border-radius: 2px; }
-  .maint-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-  .maint-icon { font-size: 1.2rem; }
-  .maint-status {
-    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 0.2rem 0.6rem; border-radius: 1px;
-  }
-  .status-ok { background: var(--green-dim); color: var(--green); border: 0.5px solid rgba(58,138,92,0.3); }
-  .status-warn { background: rgba(200,169,110,0.12); color: var(--gold); border: 0.5px solid rgba(200,169,110,0.3); }
-  .status-due { background: var(--accent-dim); color: var(--accent); border: 0.5px solid var(--accent-border); }
-  .maint-title { font-weight: 700; font-size: 0.9rem; color: var(--text); margin-bottom: 0.3rem; }
-  .maint-val { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--muted); }
-  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 1rem; overflow: hidden; }
-  .progress-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width 1s; }
-  .progress-fill.warn { background: var(--gold); }
-  .progress-fill.due { background: var(--accent); }
-
-  /* ── WEATHER ── */
-  #weather { background: var(--bg); }
-  .weather-strip {
-    display: flex; gap: 1px; margin-top: 3rem; overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .weather-strip::-webkit-scrollbar { display: none; }
-  .weather-card {
-    flex: 1; min-width: 150px; background: var(--card);
-    border: 0.5px solid var(--border); padding: 1.5rem 1rem;
-    text-align: center; transition: border-color 0.2s;
-  }
-  .weather-card:hover { border-color: var(--accent-border); }
-  .weather-card.active { border-color: var(--accent); background: var(--accent-dim); }
-  .weather-city { font-size: 0.75rem; font-weight: 700; color: var(--text); letter-spacing: 0.08em; margin-bottom: 0.8rem; }
-  .weather-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-  .weather-temp { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--text); letter-spacing: 0.05em; }
-  .weather-temp span { color: var(--accent); }
-  .weather-cond { font-size: 0.7rem; color: var(--muted); margin-top: 0.3rem; }
-  .weather-warn { font-size: 0.65rem; color: var(--gold); margin-top: 0.5rem; font-style: italic; }
-
-  /* ── COMMUNITY ── */
-  #community { background: var(--bg2); }
-  .comm-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 3rem; }
-  .comm-card { background: var(--card); border: 0.5px solid var(--border); padding: 1.5rem; }
-  .comm-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: white; margin-bottom: 1rem; }
-  .comm-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
-  .comm-handle { font-size: 0.7rem; color: var(--muted); font-family: 'Space Mono', monospace; }
-  .comm-text { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-top: 0.8rem; }
-  .comm-route { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.8rem; font-size: 0.7rem; color: var(--accent); font-weight: 700; }
-
-  /* ── FUEL CALCULATOR ── */
-  #fuel { background: var(--bg3); }
-  .fuel-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-top: 3rem; }
-  .fuel-result { background: var(--card); border: 0.5px solid var(--border); padding: 2rem; }
-  .fuel-result-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 0.5px solid var(--border); }
-  .fuel-result-row:last-child { border-bottom: none; }
-  .fuel-result-label { font-size: 0.8rem; color: var(--muted); }
-  .fuel-result-val { font-family: 'Space Mono', monospace; font-weight: 700; color: var(--text); }
-  .fuel-result-total .fuel-result-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--accent); letter-spacing: 0.05em; }
-
-  /* ── EMERGENCY ── */
-  #emergency { background: var(--bg); }
-  .emg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 3rem; }
-  .emg-card {
-    background: var(--card); border: 0.5px solid var(--border); padding: 1.5rem;
-    border-radius: 2px; text-align: center;
-  }
-  .emg-num { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--accent); letter-spacing: 0.05em; }
-  .emg-title { font-weight: 700; font-size: 0.85rem; color: var(--text); margin: 0.4rem 0 0.2rem; }
-  .emg-desc { font-size: 0.75rem; color: var(--muted); }
-  .emg-banner {
-    margin-top: 1.5rem; background: rgba(232,82,26,0.08); border: 0.5px solid var(--accent-border);
-    padding: 1.5rem; border-radius: 2px; display: flex; align-items: center; gap: 1rem;
-  }
-  .emg-sos { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: var(--accent); letter-spacing: 0.1em; line-height: 1; }
-  .emg-sos-text { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
-  .emg-sos-text strong { color: var(--text); }
-
-  /* ── GALLERY ── */
-  #gallery { background: var(--bg2); }
-  .gallery-mosaic { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 200px); gap: 2px; margin-top: 3rem; }
-  .gallery-item { background: var(--card); position: relative; overflow: hidden; cursor: pointer; }
-  .gallery-item.wide { grid-column: span 2; }
-  .gallery-item.tall { grid-row: span 2; }
-  .gallery-fill { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.5s, filter 0.3s; filter: brightness(0.6) saturate(0.8); }
-  .gallery-item:hover .gallery-fill { transform: scale(1.08); filter: brightness(0.85) saturate(1.2); }
-  .gallery-label { position: absolute; bottom: 0.8rem; left: 0.8rem; font-size: 0.7rem; font-weight: 700; color: rgba(255,255,255,0.7); letter-spacing: 0.1em; text-transform: uppercase; }
-  /* gallery gradient placeholders */
-  .gg1 { background: linear-gradient(45deg,#001a33,#003d1a); }
-  .gg2 { background: linear-gradient(135deg,#1a0a00,#3d1a00); }
-  .gg3 { background: linear-gradient(225deg,#00001a,#1a003d); }
-  .gg4 { background: linear-gradient(315deg,#001a1a,#003d3d); }
-  .gg5 { background: linear-gradient(90deg,#0a1a00,#2a3d00); }
-  .gg6 { background: linear-gradient(180deg,#1a000a,#3d001a); }
-  .gg7 { background: linear-gradient(270deg,#0a0a1a,#1a1a3d); }
-
-  /* ── CTA ── */
-  #cta { background: var(--bg); padding: 6rem 2rem; text-align: center; position: relative; overflow: hidden; }
-  .cta-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(232,82,26,0.07) 0%, transparent 70%); }
-  .cta-content { position: relative; z-index: 1; }
-  .cta-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 8vw, 6rem); line-height: 1; color: var(--text); margin-bottom: 1rem; letter-spacing: 0.03em; }
-  .cta-title em { color: var(--accent); font-style: normal; }
-  .cta-sub { color: var(--muted); font-size: 1rem; max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.6; }
-  .cta-form { display: flex; max-width: 440px; margin: 0 auto; gap: 0; }
-  .cta-input {
-    flex: 1; background: var(--card); border: 0.5px solid var(--border2);
-    color: var(--text); padding: 0.85rem 1.2rem;
-    font-family: 'Syne', sans-serif; font-size: 0.9rem;
-    border-right: none; outline: none;
-  }
-  .cta-input::placeholder { color: var(--muted); }
-  .cta-submit { background: var(--accent); color: white; border: none; padding: 0.85rem 1.5rem; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
-  .cta-submit:hover { background: var(--accent2); }
-
-  /* ── FOOTER ── */
-  footer {
-    background: var(--bg); border-top: 0.5px solid var(--border);
-    padding: 3rem 2rem; display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; max-width: 1200px; margin: 0 auto;
-  }
-  .footer-brand-name { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.08em; color: var(--text); margin-bottom: 0.5rem; }
-  .footer-brand-name span { color: var(--accent); }
-  .footer-tagline { font-size: 0.8rem; color: var(--muted); line-height: 1.6; max-width: 240px; }
-  .footer-col-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text); margin-bottom: 1rem; }
-  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
-  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.83rem; transition: color 0.2s; }
-  .footer-links a:hover { color: var(--accent); }
-  .footer-bottom { grid-column: 1/-1; border-top: 0.5px solid var(--border); padding-top: 1.5rem; display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); font-family: 'Space Mono', monospace; }
-
-  /* ── MOBILE NAV DRAWER ── */
-  .mobile-nav { display: none; position: fixed; inset: 0; z-index: 1000; background: var(--bg); flex-direction: column; justify-content: center; align-items: center; gap: 2rem; }
-  .mobile-nav.open { display: flex; }
-  .mobile-nav a { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.05em; color: var(--text); text-decoration: none; transition: color 0.2s; }
-  .mobile-nav a:hover { color: var(--accent); }
-  .mobile-close { position: absolute; top: 1.2rem; right: 1.5rem; background: none; border: none; color: var(--text); font-size: 2rem; cursor: pointer; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    nav { padding: 0 1.2rem; }
-    .nav-links { display: none; }
-    .nav-cta { display: none; }
-    .nav-mobile-btn { display: block; }
-    section { padding: 4rem 1.2rem; }
-    .routes-grid { grid-template-columns: 1fr 1fr; }
-    .route-card:first-child { grid-column: span 2; grid-row: span 1; aspect-ratio: 16/9; }
-    .gear-grid { grid-template-columns: 1fr 1fr; }
-    .maint-grid { grid-template-columns: 1fr 1fr; }
-    .emg-grid { grid-template-columns: 1fr 1fr; }
-    .planner-wrap { grid-template-columns: 1fr; }
-    .blog-grid { grid-template-columns: 1fr; }
-    .comm-grid { grid-template-columns: 1fr; }
-    .fuel-wrap { grid-template-columns: 1fr; }
-    .gallery-mosaic { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
-    .gallery-item.wide { grid-column: span 2; }
-    .gallery-item.tall { grid-row: span 1; }
-    footer { grid-template-columns: 1fr 1fr; }
-    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
-    .hero-scroll { display: none; }
-    .weather-strip { flex-wrap: nowrap; }
-  }
-  @media (max-width: 540px) {
-    .routes-grid { grid-template-columns: 1fr; }
-    .route-card:first-child { grid-column: span 1; aspect-ratio: 4/3; }
-    .gear-grid { grid-template-columns: 1fr; }
-    .maint-grid { grid-template-columns: 1fr; }
-    .emg-grid { grid-template-columns: 1fr 1fr; }
-    footer { grid-template-columns: 1fr; }
-    .cta-form { flex-direction: column; }
-    .cta-input { border-right: 0.5px solid var(--border2); border-bottom: none; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FindWork India — System Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f172a; --surface: #1e293b; --surface-hover: #334155; --border: #334155;
+      --text: #f1f5f9; --text-muted: #94a3b8;
+      --accent-blue: #38bdf8; --accent-purple: #a78bfa; --accent-green: #4ade80;
+      --accent-amber: #fbbf24; --accent-rose: #fb7185; --accent-orange: #fb923c; --accent-cyan: #22d3ee;
+    }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; width: 100vw; }
+    .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; background: rgba(15,23,42,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .header h1 { font-size: 20px; font-weight: 800; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
+    .header .badge { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 100px; background: rgba(56,189,248,0.1); color: var(--accent-blue); border: 1px solid rgba(56,189,248,0.2); }
+    .header .ts { font-size: 10px; color: var(--text-muted); margin-left: 12px; }
+    .controls { display: flex; gap: 8px; align-items: center; }
+    .controls button { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); padding: 6px 14px; border-radius: 8px; font-size: 13px; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+    .controls button:hover { background: var(--surface-hover); color: var(--text); border-color: var(--accent-blue); }
+    .canvas-wrapper { width: 100%; height: 100%; padding-top: 64px; overflow: auto; cursor: grab; }
+    .canvas-wrapper:active { cursor: grabbing; }
+    .canvas { min-width: 1600px; min-height: 1200px; padding: 60px; position: relative; transform-origin: 0 0; }
+    .tier { display: flex; justify-content: center; gap: 24px; margin-bottom: 32px; position: relative; flex-wrap: wrap; }
+    .node { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px 28px; min-width: 200px; max-width: 320px; text-align: center; cursor: pointer; transition: all 0.35s cubic-bezier(0.4,0,0.2,1); animation: nodeAppear 0.6s cubic-bezier(0.4,0,0.2,1) both; }
+    .node:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 20px 60px rgba(0,0,0,0.4); z-index: 10; }
+    .node .icon { font-size: 28px; margin-bottom: 10px; display: block; }
+    .node .title { font-size: 15px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+    .node .subtitle { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+    .node .pulse { position: absolute; top: 12px; right: 12px; width: 8px; height: 8px; border-radius: 50%; animation: pulse 2s infinite; }
+    .node .count { position: absolute; top: 12px; left: 12px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; background: rgba(255,255,255,0.08); color: var(--text-muted); }
+    .node--client { border-color: rgba(56,189,248,0.3); }
+    .node--client:hover { border-color: var(--accent-blue); box-shadow: 0 20px 60px rgba(56,189,248,0.15); }
+    .node--client .title { color: var(--accent-blue); }
+    .node--client .pulse { background: var(--accent-blue); }
+    .node--gateway { border-color: rgba(251,113,133,0.3); }
+    .node--gateway:hover { border-color: var(--accent-rose); box-shadow: 0 20px 60px rgba(251,113,133,0.15); }
+    .node--gateway .title { color: var(--accent-rose); }
+    .node--gateway .pulse { background: var(--accent-rose); }
+    .node--api { border-color: rgba(167,139,250,0.3); }
+    .node--api:hover { border-color: var(--accent-purple); box-shadow: 0 20px 60px rgba(167,139,250,0.15); }
+    .node--api .title { color: var(--accent-purple); }
+    .node--api .pulse { background: var(--accent-purple); }
+    .node--ai { border-color: rgba(34,211,238,0.3); background: linear-gradient(135deg, var(--surface), rgba(34,211,238,0.05)); }
+    .node--ai:hover { border-color: var(--accent-cyan); box-shadow: 0 20px 60px rgba(34,211,238,0.15); }
+    .node--ai .title { color: var(--accent-cyan); }
+    .node--ai .pulse { background: var(--accent-cyan); }
+    .node--worker { border-color: rgba(74,222,128,0.3); }
+    .node--worker:hover { border-color: var(--accent-green); box-shadow: 0 20px 60px rgba(74,222,128,0.15); }
+    .node--worker .title { color: var(--accent-green); }
+    .node--worker .pulse { background: var(--accent-green); }
+    .node--db { border-color: rgba(251,146,60,0.3); }
+    .node--db:hover { border-color: var(--accent-orange); box-shadow: 0 20px 60px rgba(251,146,60,0.15); }
+    .node--db .title { color: var(--accent-orange); }
+    .node--db .pulse { background: var(--accent-orange); }
+    .node--ext { border-color: rgba(251,191,36,0.3); }
+    .node--ext:hover { border-color: var(--accent-amber); box-shadow: 0 20px 60px rgba(251,191,36,0.15); }
+    .node--ext .title { color: var(--accent-amber); }
+    .node--ext .pulse { background: var(--accent-amber); }
+    .section-label { text-align: center; margin-bottom: 16px; animation: fadeIn 0.8s ease both; }
+    .section-label span { display: inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; padding: 6px 20px; border-radius: 100px; border: 1px solid var(--border); background: rgba(30,41,59,0.6); backdrop-filter: blur(10px); }
+    .section-label--blue span { color: var(--accent-blue); border-color: rgba(56,189,248,0.2); }
+    .section-label--rose span { color: var(--accent-rose); border-color: rgba(251,113,133,0.2); }
+    .section-label--purple span { color: var(--accent-purple); border-color: rgba(167,139,250,0.2); }
+    .section-label--green span { color: var(--accent-green); border-color: rgba(74,222,128,0.2); }
+    .section-label--orange span { color: var(--accent-orange); border-color: rgba(251,146,60,0.2); }
+    .section-label--amber span { color: var(--accent-amber); border-color: rgba(251,191,36,0.2); }
+    .flow-arrow { text-align: center; margin: 8px 0; animation: flowPulse 2s infinite; }
+    .flow-arrow svg { width: 24px; height: 24px; }
+    .detail-panel { position: fixed; right: -420px; top: 64px; bottom: 0; width: 400px; background: rgba(15,23,42,0.95); backdrop-filter: blur(24px); border-left: 1px solid var(--border); padding: 32px; transition: right 0.4s cubic-bezier(0.4,0,0.2,1); z-index: 50; overflow-y: auto; }
+    .detail-panel.open { right: 0; }
+    .detail-panel .close-btn { position: absolute; top: 16px; right: 16px; background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.2s; }
+    .detail-panel .close-btn:hover { background: var(--surface-hover); color: var(--text); }
+    .detail-panel h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .detail-panel .detail-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+    .detail-panel .detail-section { margin-bottom: 20px; }
+    .detail-panel .detail-section h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 10px; }
+    .detail-panel .route-list { list-style: none; }
+    .detail-panel .route-list li { font-size: 13px; padding: 6px 12px; margin-bottom: 4px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); font-family: 'SF Mono','Fira Code',monospace; color: var(--text-muted); transition: all 0.2s; }
+    .detail-panel .route-list li:hover { background: var(--surface-hover); color: var(--text); }
+    .detail-panel .tech-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .detail-panel .tech-tag { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; background: rgba(56,189,248,0.1); color: var(--accent-blue); border: 1px solid rgba(56,189,248,0.15); }
+    @keyframes nodeAppear { from { opacity: 0; transform: translateY(30px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.5); } }
+    @keyframes flowPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+    .tier:nth-child(1) .node { animation-delay: 0.1s; } .tier:nth-child(2) .node { animation-delay: 0.2s; }
+    .tier:nth-child(3) .node { animation-delay: 0.3s; } .tier:nth-child(4) .node { animation-delay: 0.5s; }
+    .tier:nth-child(5) .node { animation-delay: 0.6s; } .tier:nth-child(6) .node { animation-delay: 0.7s; }
+    .legend { position: fixed; bottom: 20px; left: 20px; display: flex; gap: 16px; flex-wrap: wrap; z-index: 50; background: rgba(15,23,42,0.85); backdrop-filter: blur(16px); padding: 12px 20px; border-radius: 12px; border: 1px solid var(--border); }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  </style>
 </head>
 <body>
-
-<!-- ── NAV ── -->
-<nav>
-  <a href="#hero" class="nav-logo">RevX<span>Nomad</span></a>
-  <ul class="nav-links">
-    <li><a href="#routes">Routes</a></li>
-    <li><a href="#gear">Gear</a></li>
-    <li><a href="#planner">Planner</a></li>
-    <li><a href="#blog">Journal</a></li>
-    <li><a href="#community">Community</a></li>
-    <li><a href="#emergency">Safety</a></li>
-  </ul>
-  <a href="https://youtube.com/@revxnomad" target="_blank" class="nav-cta">▶ YouTube</a>
-  <button class="nav-mobile-btn" id="navToggle">☰</button>
-</nav>
-
-<!-- Mobile Nav -->
-<div class="mobile-nav" id="mobileNav">
-  <button class="mobile-close" id="navClose">✕</button>
-  <a href="#routes" onclick="closeMobileNav()">Routes</a>
-  <a href="#gear" onclick="closeMobileNav()">Gear</a>
-  <a href="#planner" onclick="closeMobileNav()">Planner</a>
-  <a href="#blog" onclick="closeMobileNav()">Journal</a>
-  <a href="#community" onclick="closeMobileNav()">Community</a>
-  <a href="#emergency" onclick="closeMobileNav()">Safety</a>
-</div>
-
-<!-- ── HERO ── -->
-<section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-content">
-    <div class="hero-tag">
-      <div class="hero-tag-dot"></div>
-      Nishant Jambhulkar — RevX Nomad
+  <div class="header">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <h1>FindWork India — System Architecture</h1>
+      <span class="badge">Auto-Generated</span>
+      <span class="ts">Updated: 2026-06-08T16:25:24.190Z</span>
     </div>
-    <h1 class="hero-title">BORN TO<br>RIDE.<br><em>NAGPUR.</em></h1>
-    <p class="hero-sub">Nagpur-based moto traveller tearing through <strong>Maharashtra &amp; Madhya Pradesh</strong> — one highway at a time. Follow the journey of <strong>Nishant Jambhulkar</strong>.</p>
-    <div class="hero-btns">
-      <a href="#routes" class="btn-primary">▶ My Routes</a>
-      <a href="https://youtube.com/@revxnomad" target="_blank" class="btn-outline">▶ Watch on YouTube</a>
-      <a href="https://www.instagram.com/jusstt_nishant" target="_blank" class="btn-outline">📸 Instagram</a>
-    </div>
-    <div class="hero-stats">
-      <div>
-        <div class="hero-stat-num">18<span>K+</span></div>
-        <div class="hero-stat-label">KMs Ridden</div>
-      </div>
-      <div>
-        <div class="hero-stat-num">2<span></span></div>
-        <div class="hero-stat-label">States Covered</div>
-      </div>
-      <div>
-        <div class="hero-stat-num">MH<span></span></div>
-        <div class="hero-stat-label">Maharashtra</div>
-      </div>
-      <div>
-        <div class="hero-stat-num">MP<span></span></div>
-        <div class="hero-stat-label">Madhya Pradesh</div>
-      </div>
+    <div class="controls">
+      <button onclick="zoomIn()">Zoom In +</button>
+      <button onclick="zoomOut()">Zoom Out −</button>
+      <button onclick="resetZoom()">Reset</button>
     </div>
   </div>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    Scroll
-  </div>
-</section>
-
-<!-- ── ROUTES ── -->
-<section id="routes">
-  <div class="max-w">
-    <div class="routes-header">
-      <div>
-        <div class="section-tag">My Rides</div>
-        <h2 class="section-title">MY <em>ROUTES</em></h2>
-        <p class="section-desc">Routes I've personally ridden across Maharashtra and Madhya Pradesh — raw roads, real experiences, zero filters.</p>
+  <div class="canvas-wrapper" id="canvasWrapper">
+    <div class="canvas" id="canvas">
+      <div class="section-label section-label--blue"><span>👤 Client Tier — User-Facing Applications</span></div>
+      <div class="tier">
+        <div class="node node--client" onclick="showDetail('web')"><span class="pulse"></span><span class="icon">🌐</span><div class="title">Web Application</div><div class="subtitle">Next.js 16 · Tailwind CSS · Zustand</div></div>
+        <div class="node node--client" onclick="showDetail('mobile')"><span class="pulse"></span><span class="icon">📱</span><div class="title">Mobile Apps</div><div class="subtitle">Capacitor · iOS · Android</div></div>
+        <div class="node node--client" onclick="showDetail('pwa')"><span class="pulse"></span><span class="icon">⚡</span><div class="title">PWA Service Worker</div><div class="subtitle">Serwist · Offline Cache · Push</div></div>
       </div>
-      <a href="https://youtube.com/@revxnomad" target="_blank" class="btn-outline">Watch on YouTube →</a>
-    </div>
-    <div class="routes-grid">
-      <div class="route-card">
-        <div class="route-card-bg rg1"></div>
-        <div class="route-card-overlay"></div>
-        <div class="route-card-content">
-          <div class="route-tag gold">★ My Ride</div>
-          <div class="route-card-title">Nagpur → Pune → Mahabaleshwar → Mumbai</div>
-          <div class="route-meta">
-            <span>~900 km</span>
-            <span>4–5 Days</span>
-            <span>Intermediate</span>
+      <div class="flow-arrow"><svg viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke="#475569" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="section-label section-label--blue"><span>📄 Portal Views — 35 Pages Detected</span></div>
+      <div class="tier">
+        <div class="node node--client" onclick="showDetail('public')"><span class="count">15</span><span class="icon">🏠</span><div class="title">Public Pages</div><div class="subtitle">Home · Jobs · Companies · About</div></div>
+        <div class="node node--client" onclick="showDetail('auth')"><span class="count">3</span><span class="icon">🔑</span><div class="title">Auth Portal</div><div class="subtitle">Login · Register · 2FA · OAuth</div></div>
+        <div class="node node--client" onclick="showDetail('seeker')"><span class="count">7</span><span class="icon">👨‍💼</span><div class="title">Job Seeker Workspace</div><div class="subtitle">Dashboard · Profile · Resume · Network</div></div>
+        <div class="node node--client" onclick="showDetail('recruiter')"><span class="count">5</span><span class="icon">🏢</span><div class="title">Recruiter Workspace</div><div class="subtitle">Dashboard · Sourcing · JD Gen · Analytics</div></div>
+        <div class="node node--client" onclick="showDetail('admin')"><span class="count">3</span><span class="icon">🛡️</span><div class="title">Admin Control Center</div><div class="subtitle">Audits · Moderation · Assessments</div></div>
+      </div>
+      <div class="flow-arrow"><svg viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke="#475569" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="section-label section-label--rose"><span>🔒 Security & Routing Layer</span></div>
+      <div class="tier">
+        <div class="node node--gateway" onclick="showDetail('middleware')"><span class="pulse"></span><span class="icon">🛡️</span><div class="title">Next.js Middleware</div><div class="subtitle">Route Protection · Rate Limiting · CORS</div></div>
+        <div class="node node--gateway" onclick="showDetail('jwt')"><span class="pulse"></span><span class="icon">🔐</span><div class="title">JWT Authentication</div><div class="subtitle">jose · HTTP-Only Cookies · 2FA</div></div>
+      </div>
+      <div class="flow-arrow"><svg viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke="#475569" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="section-label section-label--purple"><span>⚙️ Backend API Handlers — 95 Endpoints</span></div>
+      <div class="tier">
+        <div class="node node--api" onclick="showDetail('authApi')"><span class="pulse"></span><span class="count">15</span><span class="icon">🔑</span><div class="title">Auth API</div><div class="subtitle">/api/auth · Login · OAuth · 2FA</div></div>
+        <div class="node node--ai" onclick="showDetail('aiApi')"><span class="pulse"></span><span class="count">17</span><span class="icon">🤖</span><div class="title">AI Recruiter Suite</div><div class="subtitle">/api/ai · Screener · JD Gen · Resume</div></div>
+        <div class="node node--api" onclick="showDetail('coreApi')"><span class="pulse"></span><span class="count">49</span><span class="icon">📦</span><div class="title">Core Application API</div><div class="subtitle">/api/* · Jobs · Companies · Profiles</div></div>
+        <div class="node node--api" onclick="showDetail('adminApi')"><span class="pulse"></span><span class="count">8</span><span class="icon">🛠️</span><div class="title">Admin Operations</div><div class="subtitle">/api/admin · Users · Reviews</div></div>
+        <div class="node node--api" onclick="showDetail('cronApi')"><span class="pulse"></span><span class="count">6</span><span class="icon">⏰</span><div class="title">Cron Scheduler</div><div class="subtitle">/api/cron · Alerts · Jobs · Reminders</div></div>
+      </div>
+      <div class="flow-arrow"><svg viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke="#475569" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="section-label section-label--green"><span>🔄 Asynchronous Processing</span></div>
+      <div class="tier">
+        <div class="node node--worker" onclick="showDetail('bullmq')"><span class="pulse"></span><span class="icon">📬</span><div class="title">BullMQ Queue</div><div class="subtitle">Job Queues · Retry Logic · Priorities</div></div>
+        <div class="node node--worker" onclick="showDetail('redis')"><span class="pulse"></span><span class="icon">⚡</span><div class="title">Redis Cache</div><div class="subtitle">ioredis · Session Store · Rate Limits</div></div>
+        <div class="node node--worker" onclick="showDetail('worker')"><span class="pulse"></span><span class="icon">🏗️</span><div class="title">Background Worker</div><div class="subtitle">src/server/worker.ts · Emails · Scrapers</div></div>
+      </div>
+      <div class="flow-arrow"><svg viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke="#475569" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+      <div style="display: flex; gap: 48px; justify-content: center; flex-wrap: wrap;">
+        <div style="flex: 1; max-width: 500px;">
+          <div class="section-label section-label--orange"><span>🗄️ Data Storage</span></div>
+          <div class="tier" style="margin-bottom: 0;">
+            <div class="node node--db" onclick="showDetail('prisma')"><span class="pulse"></span><span class="icon">🔗</span><div class="title">Prisma ORM</div><div class="subtitle">Type-safe queries · Migrations · Seeding</div></div>
+            <div class="node node--db" onclick="showDetail('postgres')"><span class="pulse"></span><span class="icon">🐘</span><div class="title">PostgreSQL</div><div class="subtitle">Users · Jobs · Companies · Applications</div></div>
           </div>
         </div>
-        <div class="route-card-hover"><a href="#" class="view-route-btn">View Route</a></div>
-      </div>
-      <div class="route-card">
-        <div class="route-card-bg rg2"></div>
-        <div class="route-card-overlay"></div>
-        <div class="route-card-content">
-          <div class="route-tag">Highway</div>
-          <div class="route-card-title">Nagpur → Pachmarhi</div>
-          <div class="route-meta"><span>280 km</span><span>2 Days</span></div>
-        </div>
-        <div class="route-card-hover"><a href="#" class="view-route-btn">View Route</a></div>
-      </div>
-      <div class="route-card">
-        <div class="route-card-bg rg3"></div>
-        <div class="route-card-overlay"></div>
-        <div class="route-card-content">
-          <div class="route-tag green">Ghat Road</div>
-          <div class="route-card-title">Pune → Mahabaleshwar Ghats</div>
-          <div class="route-meta"><span>120 km</span><span>1 Day</span></div>
-        </div>
-        <div class="route-card-hover"><a href="#" class="view-route-btn">View Route</a></div>
-      </div>
-      <div class="route-card">
-        <div class="route-card-bg rg4"></div>
-        <div class="route-card-overlay"></div>
-        <div class="route-card-content">
-          <div class="route-tag">Scenic</div>
-          <div class="route-card-title">Nagpur → Pench → Kanha</div>
-          <div class="route-meta"><span>350 km</span><span>3 Days</span></div>
-        </div>
-        <div class="route-card-hover"><a href="#" class="view-route-btn">View Route</a></div>
-      </div>
-      <div class="route-card">
-        <div class="route-card-bg rg5"></div>
-        <div class="route-card-overlay"></div>
-        <div class="route-card-content">
-          <div class="route-tag">Coastal</div>
-          <div class="route-card-title">Mumbai → Alibaug Coast</div>
-          <div class="route-meta"><span>100 km</span><span>1 Day</span></div>
-        </div>
-        <div class="route-card-hover"><a href="#" class="view-route-btn">View Route</a></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── GEAR ── -->
-<section id="gear">
-  <div class="max-w">
-    <div class="section-tag">Essential Gear</div>
-    <h2 class="section-title">PACK <em>SMART</em></h2>
-    <p class="section-desc">Everything a long-distance Indian moto-tourist needs — from high-altitude layers to monsoon-proof luggage. Curated by riders, for riders.</p>
-    <div class="gear-grid">
-      <div class="gear-card">
-        <div class="gear-icon">🪖</div>
-        <div class="gear-title">Helmet & Head Gear</div>
-        <div class="gear-desc">Full-face, modular, and adventure helmets. ISI/DOT certified for Indian road conditions.</div>
-      </div>
-      <div class="gear-card">
-        <div class="gear-icon">🧥</div>
-        <div class="gear-title">Riding Jackets</div>
-        <div class="gear-desc">CE-rated armor jackets — mesh for plains, insulated for Himalayas, waterproof for monsoon.</div>
-      </div>
-      <div class="gear-card">
-        <div class="gear-icon">🧤</div>
-        <div class="gear-title">Gloves & Protection</div>
-        <div class="gear-desc">Knuckle-guard gloves, knee pads, elbow guards and back protectors for all terrain types.</div>
-      </div>
-      <div class="gear-card">
-        <div class="gear-icon">👢</div>
-        <div class="gear-title">Riding Boots</div>
-        <div class="gear-desc">Waterproof ankle boots, adventure touring boots, and offroad enduro footwear options.</div>
-      </div>
-      <div class="gear-card">
-        <div class="gear-icon">🎒</div>
-        <div class="gear-title">Luggage & Panniers</div>
-        <div class="gear-desc">Soft saddlebags, hard panniers, tank bags, and dry bags for India's varied terrain.</div>
-      </div>
-      <div class="gear-card">
-        <div class="gear-icon">🔧</div>
-        <div class="gear-title">Tool Kit & Spares</div>
-        <div class="gear-desc">Compact tool rolls, puncture kits, spare levers, chain lubes and emergency spares list.</div>
-      </div>
-      <div class="gear-card">
-        <div class="gear-icon">📡</div>
-        <div class="gear-title">Navigation & Comms</div>
-        <div class="gear-desc">GPS mounts, Bluetooth intercoms, offline map apps and satellite communicators for remote routes.</div>
-      </div>
-      <div class="gear-card">
-        <div class="gear-icon">⚡</div>
-        <div class="gear-title">Electronics & Power</div>
-        <div class="gear-desc">USB chargers, power banks, action cameras, dashcams and USB-powered tyre inflators.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── ROUTE PLANNER ── -->
-<section id="planner">
-  <div class="max-w">
-    <div class="section-tag">Route Planner</div>
-    <h2 class="section-title">PLAN YOUR <em>RIDE</em></h2>
-    <p class="section-desc">Calculate your route, estimate fuel, plan stops, and get a day-by-day itinerary for your next Indian moto adventure.</p>
-    <div class="planner-wrap">
-      <div>
-        <div class="planner-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Starting Point</label>
-              <input type="text" class="form-input" placeholder="e.g. Manali, HP" id="startPoint" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Destination</label>
-              <input type="text" class="form-input" placeholder="e.g. Leh, Ladakh" id="endPoint" />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Bike Type</label>
-              <select class="form-select" id="bikeType">
-                <option>Royal Enfield Himalayan</option>
-                <option>RE Classic 350</option>
-                <option>RE Thunderbird</option>
-                <option>KTM Duke 390</option>
-                <option>Hero Xpulse 200</option>
-                <option>BMW G310 GS</option>
-                <option>Bajaj Dominar 400</option>
-                <option>Jawa Perak</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Travel Style</label>
-              <select class="form-select" id="travelStyle">
-                <option>Solo Rider</option>
-                <option>Group Ride</option>
-                <option>Couple Touring</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Start Date</label>
-              <input type="date" class="form-input" id="startDate" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Days Available</label>
-              <input type="number" class="form-input" placeholder="e.g. 10" min="1" max="60" id="daysAvail" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Ride Preferences</label>
-            <select class="form-select" id="ridePrefs">
-              <option>Fastest Route</option>
-              <option>Most Scenic</option>
-              <option>Offroad Adventure</option>
-              <option>Coastal Highways</option>
-              <option>Avoid Highways</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Daily Km Target</label>
-            <input type="number" class="form-input" placeholder="e.g. 200" id="dailyKm" />
-          </div>
-          <button class="btn-primary" onclick="generatePlan()" style="margin-top:0.5rem;">✦ Generate Route Plan</button>
-        </div>
-        <div id="planOutput" style="margin-top:1.5rem;display:none;background:var(--card);border:0.5px solid var(--accent-border);padding:1.5rem;border-radius:2px;">
-          <div class="section-tag" style="margin-bottom:0.8rem;">Your Route Plan</div>
-          <div id="planContent" style="font-size:0.85rem;color:var(--muted);line-height:1.8;font-family:'Space Mono',monospace;"></div>
-        </div>
-      </div>
-      <div class="planner-map">
-        <div class="map-header">
-          <div class="map-dot" style="background:#e05050;"></div>
-          <div class="map-dot" style="background:#e0a050;"></div>
-          <div class="map-dot" style="background:#50c050;"></div>
-        </div>
-        <div class="map-body">
-          <svg class="india-map-svg" viewBox="0 0 400 480" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- India outline simplified -->
-            <path d="M155 30 L200 20 L230 35 L270 30 L290 50 L310 70 L320 100 L330 130 L320 150 L340 170 L350 200 L340 230 L320 260 L300 290 L270 320 L250 350 L230 370 L210 400 L200 430 L195 450 L190 440 L185 420 L175 400 L160 380 L145 360 L125 330 L105 300 L90 270 L80 240 L70 210 L75 180 L65 155 L60 130 L75 105 L90 80 L110 60 L135 40 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-            <!-- Kashmir/Ladakh top -->
-            <path d="M155 30 L170 15 L200 10 L225 20 L245 15 L265 25 L275 40 L265 50 L250 40 L230 35" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-            <!-- Major route line: Manali-Leh -->
-            <path d="M200 55 L215 45 L235 40 L255 48 L270 65" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3" stroke-linecap="round"/>
-            <!-- Route dots -->
-            <circle cx="200" cy="55" r="5" fill="var(--accent)"/>
-            <circle cx="270" cy="65" r="5" fill="var(--accent)"/>
-            <!-- Spiti route -->
-            <path d="M185 80 L200 70 L220 75 L240 85" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="3 3"/>
-            <!-- Konkan coastal -->
-            <path d="M140 200 L130 240 L120 280 L115 320 L120 340" stroke="#3a8a5c" stroke-width="1.5" stroke-dasharray="4 3"/>
-            <!-- Northeast -->
-            <path d="M310 120 L330 110 L350 120 L360 140 L350 160" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="3 3"/>
-            <!-- Char Dham -->
-            <path d="M175 90 L185 80 L200 75 L210 85 L205 100" stroke="#c8a96e" stroke-width="1.5" stroke-dasharray="3 3"/>
-            <!-- City dots -->
-            <circle cx="195" cy="130" r="3" fill="rgba(255,255,255,0.4)"/>
-            <circle cx="160" cy="180" r="3" fill="rgba(255,255,255,0.4)"/>
-            <circle cx="200" cy="200" r="3" fill="rgba(255,255,255,0.4)"/>
-            <circle cx="240" cy="160" r="3" fill="rgba(255,255,255,0.4)"/>
-            <circle cx="150" cy="280" r="3" fill="rgba(255,255,255,0.4)"/>
-            <circle cx="200" cy="290" r="3" fill="rgba(255,255,255,0.4)"/>
-            <circle cx="270" cy="240" r="3" fill="rgba(255,255,255,0.4)"/>
-            <circle cx="175" cy="390" r="3" fill="rgba(255,255,255,0.3)"/>
-            <!-- Labels -->
-            <text x="205" y="53" fill="rgba(255,255,255,0.6)" font-size="7" font-family="Space Mono,monospace">Manali</text>
-            <text x="272" y="62" fill="rgba(255,255,255,0.6)" font-size="7" font-family="Space Mono,monospace">Leh</text>
-            <text x="198" y="200" fill="rgba(255,255,255,0.4)" font-size="7" font-family="Space Mono,monospace">Delhi</text>
-            <text x="148" y="290" fill="rgba(255,255,255,0.4)" font-size="7" font-family="Space Mono,monospace">Mumbai</text>
-            <text x="270" y="250" fill="rgba(255,255,255,0.4)" font-size="7" font-family="Space Mono,monospace">Kolkata</text>
-            <text x="172" y="400" fill="rgba(255,255,255,0.4)" font-size="7" font-family="Space Mono,monospace">Chennai</text>
-            <!-- Legend -->
-            <rect x="10" y="400" width="110" height="70" rx="2" fill="rgba(0,0,0,0.5)" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
-            <line x1="18" y1="415" x2="34" y2="415" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
-            <text x="38" y="419" fill="rgba(255,255,255,0.5)" font-size="7" font-family="Space Mono,monospace">Himalayan</text>
-            <line x1="18" y1="430" x2="34" y2="430" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3 3"/>
-            <text x="38" y="434" fill="rgba(255,255,255,0.5)" font-size="7" font-family="Space Mono,monospace">Spiti</text>
-            <line x1="18" y1="445" x2="34" y2="445" stroke="#3a8a5c" stroke-width="2" stroke-dasharray="4 3"/>
-            <text x="38" y="449" fill="rgba(255,255,255,0.5)" font-size="7" font-family="Space Mono,monospace">Coastal</text>
-            <line x1="18" y1="460" x2="34" y2="460" stroke="var(--teal)" stroke-width="2" stroke-dasharray="3 3"/>
-            <text x="38" y="464" fill="rgba(255,255,255,0.5)" font-size="7" font-family="Space Mono,monospace">Northeast</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── MAINTENANCE TRACKER ── -->
-<section id="maintenance">
-  <div class="max-w">
-    <div class="section-tag">Bike Health</div>
-    <h2 class="section-title">MAINTENANCE <em>TRACKER</em></h2>
-    <p class="section-desc">Never miss a service interval on the road. Track your bike's vitals and get notified when maintenance is due.</p>
-    <div class="maint-grid">
-      <div class="maint-card">
-        <div class="maint-card-header">
-          <span class="maint-icon">🛢️</span>
-          <span class="maint-status status-due">Due Now</span>
-        </div>
-        <div class="maint-title">Engine Oil</div>
-        <div class="maint-val">Last: 3,200 km ago · Due: 3,000 km</div>
-        <div class="progress-bar"><div class="progress-fill due" style="width:107%;"></div></div>
-      </div>
-      <div class="maint-card">
-        <div class="maint-card-header">
-          <span class="maint-icon">⛓️</span>
-          <span class="maint-status status-warn">Soon</span>
-        </div>
-        <div class="maint-title">Chain Lubrication</div>
-        <div class="maint-val">Last: 400 km ago · Due: 500 km</div>
-        <div class="progress-bar"><div class="progress-fill warn" style="width:80%;"></div></div>
-      </div>
-      <div class="maint-card">
-        <div class="maint-card-header">
-          <span class="maint-icon">🔩</span>
-          <span class="maint-status status-ok">Good</span>
-        </div>
-        <div class="maint-title">Air Filter</div>
-        <div class="maint-val">Last: 1,200 km ago · Due: 6,000 km</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:20%;"></div></div>
-      </div>
-      <div class="maint-card">
-        <div class="maint-card-header">
-          <span class="maint-icon">🛞</span>
-          <span class="maint-status status-warn">Check Soon</span>
-        </div>
-        <div class="maint-title">Tyre Pressure</div>
-        <div class="maint-val">Front: 28 psi · Rear: 32 psi</div>
-        <div class="progress-bar"><div class="progress-fill warn" style="width:65%;"></div></div>
-      </div>
-      <div class="maint-card">
-        <div class="maint-card-header">
-          <span class="maint-icon">🔋</span>
-          <span class="maint-status status-ok">Healthy</span>
-        </div>
-        <div class="maint-title">Battery</div>
-        <div class="maint-val">Voltage: 12.7V · Age: 14 months</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:45%;"></div></div>
-      </div>
-      <div class="maint-card">
-        <div class="maint-card-header">
-          <span class="maint-icon">🛑</span>
-          <span class="maint-status status-ok">Good</span>
-        </div>
-        <div class="maint-title">Brake Pads</div>
-        <div class="maint-val">Front: 60% · Rear: 75%</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:60%;"></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── WEATHER ── -->
-<section id="weather">
-  <div class="max-w">
-    <div class="section-tag">Riding Conditions</div>
-    <h2 class="section-title">WEATHER <em>WATCH</em></h2>
-    <p class="section-desc">Real-time riding condition alerts for popular moto routes across India — plan around the monsoons, snowfall, and heatwaves.</p>
-    <div class="weather-strip">
-      <div class="weather-card active">
-        <div class="weather-city">Manali</div>
-        <div class="weather-icon">🌨️</div>
-        <div class="weather-temp">4<span>°C</span></div>
-        <div class="weather-cond">Snow possible</div>
-        <div class="weather-warn">⚠ Check Rohtang Pass</div>
-      </div>
-      <div class="weather-card">
-        <div class="weather-city">Leh</div>
-        <div class="weather-icon">☀️</div>
-        <div class="weather-temp">12<span>°C</span></div>
-        <div class="weather-cond">Clear & sunny</div>
-        <div class="weather-warn">Ideal riding day</div>
-      </div>
-      <div class="weather-card">
-        <div class="weather-city">Spiti</div>
-        <div class="weather-icon">🌬️</div>
-        <div class="weather-temp">-2<span>°C</span></div>
-        <div class="weather-cond">High winds</div>
-        <div class="weather-warn">⚠ Kunzum Pass closed</div>
-      </div>
-      <div class="weather-card">
-        <div class="weather-city">Goa</div>
-        <div class="weather-icon">⛅</div>
-        <div class="weather-temp">30<span>°C</span></div>
-        <div class="weather-cond">Partly cloudy</div>
-        <div class="weather-warn">Great coastal ride</div>
-      </div>
-      <div class="weather-card">
-        <div class="weather-city">Sikkim</div>
-        <div class="weather-icon">🌧️</div>
-        <div class="weather-temp">14<span>°C</span></div>
-        <div class="weather-cond">Heavy rain</div>
-        <div class="weather-warn">⚠ Landslide risk</div>
-      </div>
-      <div class="weather-card">
-        <div class="weather-city">Rajasthan</div>
-        <div class="weather-icon">🔆</div>
-        <div class="weather-temp">38<span>°C</span></div>
-        <div class="weather-cond">Hot & dry</div>
-        <div class="weather-warn">Hydrate frequently</div>
-      </div>
-      <div class="weather-card">
-        <div class="weather-city">Coorg</div>
-        <div class="weather-icon">🌦️</div>
-        <div class="weather-temp">22<span>°C</span></div>
-        <div class="weather-cond">Misty morning</div>
-        <div class="weather-warn">Perfect riding weather</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── FUEL CALCULATOR ── -->
-<section id="fuel">
-  <div class="max-w">
-    <div class="section-tag">Trip Calculator</div>
-    <h2 class="section-title">FUEL & <em>BUDGET</em></h2>
-    <p class="section-desc">Estimate total trip cost — fuel, accommodation, toll, food, and emergency funds — for your ride across India.</p>
-    <div class="fuel-wrap">
-      <div class="planner-form">
-        <div class="form-group">
-          <label class="form-label">Total Distance (km)</label>
-          <input type="number" class="form-input" id="fDist" value="800" oninput="calcFuel()" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Bike Mileage (km/L)</label>
-          <input type="number" class="form-input" id="fMileage" value="28" oninput="calcFuel()" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Fuel Price (₹/L)</label>
-          <input type="number" class="form-input" id="fPrice" value="103" oninput="calcFuel()" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">No. of Days</label>
-          <input type="number" class="form-input" id="fDays" value="7" oninput="calcFuel()" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Accommodation per Night (₹)</label>
-          <input type="number" class="form-input" id="fAccom" value="800" oninput="calcFuel()" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Food Budget per Day (₹)</label>
-          <input type="number" class="form-input" id="fFood" value="400" oninput="calcFuel()" />
-        </div>
-      </div>
-      <div class="fuel-result">
-        <div class="section-tag" style="margin-bottom:1rem;">Estimated Budget</div>
-        <div class="fuel-result-row">
-          <span class="fuel-result-label">Fuel Required</span>
-          <span class="fuel-result-val" id="rLitres">28.6 L</span>
-        </div>
-        <div class="fuel-result-row">
-          <span class="fuel-result-label">Fuel Cost</span>
-          <span class="fuel-result-val" id="rFuelCost">₹2,945</span>
-        </div>
-        <div class="fuel-result-row">
-          <span class="fuel-result-label">Accommodation</span>
-          <span class="fuel-result-val" id="rAccom">₹5,600</span>
-        </div>
-        <div class="fuel-result-row">
-          <span class="fuel-result-label">Food</span>
-          <span class="fuel-result-val" id="rFood">₹2,800</span>
-        </div>
-        <div class="fuel-result-row">
-          <span class="fuel-result-label">Toll + Misc (est.)</span>
-          <span class="fuel-result-val" id="rMisc">₹800</span>
-        </div>
-        <div class="fuel-result-row">
-          <span class="fuel-result-label">Emergency Buffer (15%)</span>
-          <span class="fuel-result-val" id="rBuffer">₹1,822</span>
-        </div>
-        <div class="fuel-result-row fuel-result-total">
-          <span class="fuel-result-label" style="font-weight:700;color:var(--text);">Total Estimate</span>
-          <span class="fuel-result-val" id="rTotal">₹13,967</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── BLOG ── -->
-<section id="blog">
-  <div class="max-w">
-    <div class="routes-header">
-      <div>
-        <div class="section-tag">Rider's Journal</div>
-        <h2 class="section-title">TALES FROM <em>THE ROAD</em></h2>
-      </div>
-      <a href="#" class="btn-outline">All Stories →</a>
-    </div>
-    <div class="blog-grid">
-      <div class="blog-card">
-        <div class="blog-thumb">
-          <div class="blog-thumb-bg bg1"></div>
-        </div>
-        <div class="blog-body">
-          <div class="blog-cat">Adventure · Maharashtra</div>
-          <div class="blog-title">Nagpur to Mumbai: 900 KMs of Pure Maharashtra Soul</div>
-          <div class="blog-excerpt">From Nagpur's orange-scented highways to the ghats of Mahabaleshwar and Mumbai's chaos — this route has everything a rider could ask for. My most memorable ride yet.</div>
-          <div class="blog-meta">
-            <span>Nishant Jambhulkar</span>
-            <span>10 MIN READ</span>
-          </div>
-        </div>
-      </div>
-      <div class="blog-card">
-        <div class="blog-thumb">
-          <div class="blog-thumb-bg bg2"></div>
-        </div>
-        <div class="blog-body">
-          <div class="blog-cat">Guide · Roads</div>
-          <div class="blog-title">Pachmarhi: MP's Hidden Gem on Two Wheels</div>
-          <div class="blog-excerpt">Madhya Pradesh doesn't get the hype it deserves. Pachmarhi's winding forest roads are some of the best riding I've experienced in central India.</div>
-          <div class="blog-meta">
-            <span>Nishant Jambhulkar</span>
-            <span>7 MIN READ</span>
-          </div>
-        </div>
-      </div>
-      <div class="blog-card">
-        <div class="blog-thumb">
-          <div class="blog-thumb-bg bg3"></div>
-        </div>
-        <div class="blog-body">
-          <div class="blog-cat">Ride Story · Ghats</div>
-          <div class="blog-title">Mahabaleshwar Ghats at Dawn — Worth Every Km</div>
-          <div class="blog-excerpt">Leaving Pune at 4am just to hit the ghats before sunrise. The mist, the silence, the curves — this is why we ride.</div>
-          <div class="blog-meta">
-            <span>Nishant Jambhulkar</span>
-            <span>5 MIN READ</span>
+        <div style="flex: 1; max-width: 700px;">
+          <div class="section-label section-label--amber"><span>☁️ External & Cloud Integrations</span></div>
+          <div class="tier" style="margin-bottom: 0;">
+            <div class="node node--ext" onclick="showDetail('llm')"><span class="icon">🧠</span><div class="title">LLM AI Engine</div><div class="subtitle">OpenAI · Resume Parsing · Matching</div></div>
+            <div class="node node--ext" onclick="showDetail('azure')"><span class="icon">☁️</span><div class="title">Azure Blob Storage</div><div class="subtitle">PDF Uploads · Resume Files</div></div>
+            <div class="node node--ext" onclick="showDetail('firebase')"><span class="icon">🔔</span><div class="title">Firebase FCM</div><div class="subtitle">Push Notifications · Alerts</div></div>
+            <div class="node node--ext" onclick="showDetail('smtp')"><span class="icon">✉️</span><div class="title">SMTP Mail</div><div class="subtitle">Job Alerts · Reminders · OTP</div></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</section>
-
-<!-- ── COMMUNITY ── -->
-<section id="community">
-  <div class="max-w">
-    <div class="routes-header">
-      <div>
-        <div class="section-tag">Rider Community</div>
-        <h2 class="section-title">JOIN THE <em>TRIBE</em></h2>
-        <p class="section-desc">24,000+ riders sharing routes, tips, and road stories across India's most iconic highways.</p>
-      </div>
-      <a href="#" class="btn-outline">Join Community →</a>
-    </div>
-    <div class="comm-grid">
-      <div class="comm-card">
-        <div class="comm-avatar">NJ</div>
-        <div class="comm-name">Nishant Jambhulkar</div>
-        <div class="comm-handle">@jusstt_nishant</div>
-        <div class="comm-text">"Nagpur to Mumbai via Mahabaleshwar — 900 km of pure bliss. The ghats at sunrise are something else entirely. Maharashtra roads have my heart."</div>
-        <div class="comm-route">📍 Nagpur → Mumbai · 900 km</div>
-      </div>
-      <div class="comm-card">
-        <div class="comm-avatar" style="background:var(--gold);color:#1a1000;">PM</div>
-        <div class="comm-name">Priya Menon</div>
-        <div class="comm-handle">@keralarides</div>
-        <div class="comm-text">"Rode the Konkan coast from Mumbai to Kanyakumari in 9 days. Every sunset was more dramatic than the last. The coastal food alone is worth the trip!"</div>
-        <div class="comm-route">📍 Mumbai → Kanyakumari · 1,850 km</div>
-      </div>
-      <div class="comm-card">
-        <div class="comm-avatar" style="background:var(--green);color:white;">AD</div>
-        <div class="comm-name">Aniket Das</div>
-        <div class="comm-handle">@northeast_roads</div>
-        <div class="comm-text">"Meghalaya and Nagaland changed my perspective on riding. No tourist crowds, no GPS signal, just you and the mist. Absolutely recommended for experienced riders."</div>
-        <div class="comm-route">📍 Guwahati → Kohima · 480 km</div>
-      </div>
-    </div>
+  <div class="detail-panel" id="detailPanel">
+    <button class="close-btn" onclick="closeDetail()">✕</button>
+    <h2 id="detailTitle"></h2>
+    <p class="detail-subtitle" id="detailSubtitle"></p>
+    <div id="detailContent"></div>
   </div>
-</section>
-
-<!-- ── EMERGENCY ── -->
-<section id="emergency">
-  <div class="max-w">
-    <div class="section-tag">Rider Safety</div>
-    <h2 class="section-title">EMERGENCY <em>CONTACTS</em></h2>
-    <p class="section-desc">Save these before every ride. Remote routes across India can leave you without signal — but preparation saves lives.</p>
-    <div class="emg-grid">
-      <div class="emg-card">
-        <div class="emg-num">112</div>
-        <div class="emg-title">National Emergency</div>
-        <div class="emg-desc">Police, Fire & Ambulance</div>
-      </div>
-      <div class="emg-card">
-        <div class="emg-num">1033</div>
-        <div class="emg-title">Highway Help</div>
-        <div class="emg-desc">NHAI Highway Helpline</div>
-      </div>
-      <div class="emg-card">
-        <div class="emg-num">14432</div>
-        <div class="emg-title">Road Accidents</div>
-        <div class="emg-desc">National Road Safety</div>
-      </div>
-      <div class="emg-card">
-        <div class="emg-num">01982</div>
-        <div class="emg-title">Ladakh BRO</div>
-        <div class="emg-desc">Border Roads Org Leh</div>
-      </div>
-    </div>
-    <div class="emg-banner">
-      <div class="emg-sos">SOS</div>
-      <div class="emg-sos-text">
-        <strong>Before every Himalayan or remote ride:</strong> File a route plan with a trusted contact. Carry a PLB (Personal Locator Beacon) or satellite communicator. Know the nearest BSNL tower location — other networks drop fast above 3,000m. Keep the State Disaster Management Authority number of each state you cross.
-      </div>
-    </div>
-    <div style="margin-top:2rem;">
-      <div class="section-tag" style="margin-bottom:1rem;">Pre-Ride Checklist</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.5rem;" id="checklist"></div>
-    </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background: var(--accent-blue);"></div> Client</div>
+    <div class="legend-item"><div class="legend-dot" style="background: var(--accent-rose);"></div> Security</div>
+    <div class="legend-item"><div class="legend-dot" style="background: var(--accent-purple);"></div> API</div>
+    <div class="legend-item"><div class="legend-dot" style="background: var(--accent-cyan);"></div> AI Suite</div>
+    <div class="legend-item"><div class="legend-dot" style="background: var(--accent-green);"></div> Workers</div>
+    <div class="legend-item"><div class="legend-dot" style="background: var(--accent-orange);"></div> Database</div>
+    <div class="legend-item"><div class="legend-dot" style="background: var(--accent-amber);"></div> External</div>
   </div>
-</section>
-
-<!-- ── GALLERY ── -->
-<section id="gallery">
-  <div class="max-w">
-    <div class="routes-header" style="margin-bottom:2rem;">
-      <div>
-        <div class="section-tag">Visual Stories</div>
-        <h2 class="section-title">ROADS OF <em>INDIA</em></h2>
-      </div>
-      <a href="#" class="btn-outline">Submit Your Shot →</a>
-    </div>
-    <div class="gallery-mosaic">
-      <div class="gallery-item wide tall">
-        <div class="gallery-fill gg1"></div>
-        <div class="gallery-label">Khardung La Pass</div>
-      </div>
-      <div class="gallery-item">
-        <div class="gallery-fill gg2"></div>
-        <div class="gallery-label">Spiti Valley</div>
-      </div>
-      <div class="gallery-item">
-        <div class="gallery-fill gg3"></div>
-        <div class="gallery-label">Konkan Coast</div>
-      </div>
-      <div class="gallery-item">
-        <div class="gallery-fill gg4"></div>
-        <div class="gallery-label">Zanskar Road</div>
-      </div>
-      <div class="gallery-item">
-        <div class="gallery-fill gg5"></div>
-        <div class="gallery-label">Coorg Ghats</div>
-      </div>
-      <div class="gallery-item wide">
-        <div class="gallery-fill gg7"></div>
-        <div class="gallery-label">Tawang, Arunachal</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── CTA ── -->
-<section id="cta">
-  <div class="cta-bg"></div>
-  <div class="max-w cta-content">
-    <div class="section-tag" style="justify-content:center;margin-bottom:1rem;">Follow the Journey</div>
-    <h2 class="cta-title">SUBSCRIBE TO<br><em>THE JOURNEY</em></h2>
-    <p class="cta-sub">Get notified when Nishant drops a new ride story, route guide, or YouTube video.</p>
-    <div class="cta-form">
-      <input type="email" class="cta-input" placeholder="your@email.com" />
-      <button class="cta-submit">Subscribe</button>
-    </div>
-    <p style="margin-top:1rem;font-size:0.72rem;color:var(--muted);font-family:'Space Mono',monospace;">Only road stories. No spam. Unsubscribe anytime.</p>
-  </div>
-</section>
-
-<!-- ── FOOTER ── -->
-<div style="background:var(--bg);padding:0 2rem;">
-  <footer>
-    <div>
-      <div class="footer-brand-name">RevX<span>Nomad</span></div>
-      <div class="footer-tagline">Nishant Jambhulkar's moto travel journal — 18,000+ kms across Maharashtra &amp; Madhya Pradesh. Follow the journey.</div>
-    </div>
-    <div>
-      <div class="footer-col-title">Explore</div>
-      <ul class="footer-links">
-        <li><a href="#">All Routes</a></li>
-        <li><a href="#">Route Planner</a></li>
-        <li><a href="#">Maps & GPX</a></li>
-        <li><a href="#">Offroad Trails</a></li>
-        <li><a href="#">Coastal Rides</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-title">Resources</div>
-      <ul class="footer-links">
-        <li><a href="#">Gear Reviews</a></li>
-        <li><a href="#">Maintenance Tips</a></li>
-        <li><a href="#">Weather Guide</a></li>
-        <li><a href="#">Emergency Prep</a></li>
-        <li><a href="#">Permit Guide</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-title">Follow Nishant</div>
-      <ul class="footer-links">
-        <li><a href="https://www.instagram.com/jusstt_nishant" target="_blank">📸 Instagram</a></li>
-        <li><a href="https://youtube.com/@revxnomad" target="_blank">▶ YouTube — RevX Nomad</a></li>
-        <li><a href="#blog">Ride Stories</a></li>
-        <li><a href="#routes">My Routes</a></li>
-        <li><a href="#community">Community</a></li>
-      </ul>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2025 Nishant Jambhulkar · RevX Nomad. Made with ♥ on the open road.</span>
-      <span>Privacy · Terms · Sitemap</span>
-    </div>
-  </footer>
-</div>
-
-<script>
-// Mobile Nav
-document.getElementById('navToggle').onclick = () => document.getElementById('mobileNav').classList.add('open');
-document.getElementById('navClose').onclick = () => document.getElementById('mobileNav').classList.remove('open');
-function closeMobileNav() { document.getElementById('mobileNav').classList.remove('open'); }
-
-// Fuel Calculator
-function calcFuel() {
-  const dist = parseFloat(document.getElementById('fDist').value) || 0;
-  const mileage = parseFloat(document.getElementById('fMileage').value) || 1;
-  const price = parseFloat(document.getElementById('fPrice').value) || 0;
-  const days = parseFloat(document.getElementById('fDays').value) || 0;
-  const accom = parseFloat(document.getElementById('fAccom').value) || 0;
-  const food = parseFloat(document.getElementById('fFood').value) || 0;
-
-  const litres = dist / mileage;
-  const fuelCost = litres * price;
-  const accomTotal = accom * days;
-  const foodTotal = food * days;
-  const misc = Math.round(dist * 1);
-  const sub = fuelCost + accomTotal + foodTotal + misc;
-  const buffer = sub * 0.15;
-  const total = sub + buffer;
-
-  document.getElementById('rLitres').textContent = litres.toFixed(1) + ' L';
-  document.getElementById('rFuelCost').textContent = '₹' + Math.round(fuelCost).toLocaleString('en-IN');
-  document.getElementById('rAccom').textContent = '₹' + Math.round(accomTotal).toLocaleString('en-IN');
-  document.getElementById('rFood').textContent = '₹' + Math.round(foodTotal).toLocaleString('en-IN');
-  document.getElementById('rMisc').textContent = '₹' + misc.toLocaleString('en-IN');
-  document.getElementById('rBuffer').textContent = '₹' + Math.round(buffer).toLocaleString('en-IN');
-  document.getElementById('rTotal').textContent = '₹' + Math.round(total).toLocaleString('en-IN');
-}
-calcFuel();
-
-// Route Planner
-function generatePlan() {
-  const start = document.getElementById('startPoint').value || 'Delhi';
-  const end = document.getElementById('endPoint').value || 'Leh';
-  const days = document.getElementById('daysAvail').value || '8';
-  const bike = document.getElementById('bikeType').value;
-  const daily = document.getElementById('dailyKm').value || '200';
-
-  const plan = `ROUTE: ${start} → ${end}
-DURATION: ${days} days
-BIKE: ${bike}
-DAILY TARGET: ~${daily} km
-
-DAY-BY-DAY PLAN:
-───────────────────────────────
-Day 1 : ${start} → Departure Point
-Day 2 : Mountain foothills entry
-Day 3 : Scenic valley crossing  
-Day 4 : Rest & acclimatize (if altitude)
-Day 5 : High altitude section
-Day 6 : Border/checkpoint zone
-Day 7 : Final push to ${end}
-Day 8 : Buffer / return departure
-
-MUST-CARRY:
-• RC, DL, Insurance papers
-• Aadhaar/Passport (border zones)
-• Permit if required (ILP/PAP)
-• Emergency contact card
-
-FUEL STOPS: Every 150–200 km max
-HOTELS: Book in advance — limited rooms
-CONNECTIVITY: BSNL SIM recommended`;
-
-  document.getElementById('planOutput').style.display = 'block';
-  document.getElementById('planContent').textContent = plan;
-  document.getElementById('planOutput').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-// Checklist
-const checkItems = [
-  'RC Book & DL', 'Bike Insurance', 'PUC Certificate', 'Aadhaar / Passport',
-  'Inner Line Permit (if req)', 'First Aid Kit', 'Puncture Repair Kit', 'Chain Lube',
-  'Spare Clutch Lever', 'Spare Brake Lever', 'Tow Rope', 'Bungee Cords',
-  'Offline Maps Downloaded', 'Emergency Contacts Saved', 'Satellite Beacon (remote)', 'Power Bank Charged'
-];
-const cl = document.getElementById('checklist');
-checkItems.forEach(item => {
-  const div = document.createElement('div');
-  div.style.cssText = 'display:flex;align-items:center;gap:0.6rem;background:var(--card);border:0.5px solid var(--border);padding:0.7rem 1rem;border-radius:2px;cursor:pointer;transition:border-color 0.2s;';
-  div.innerHTML = `<div style="width:16px;height:16px;border:0.5px solid var(--border2);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.2s;" class="chk"></div><span style="font-size:0.8rem;color:var(--muted);">${item}</span>`;
-  let checked = false;
-  div.onclick = () => {
-    checked = !checked;
-    const chk = div.querySelector('.chk');
-    if(checked) {
-      chk.textContent = '✓';
-      chk.style.background = 'var(--green)';
-      chk.style.borderColor = 'var(--green)';
-      chk.style.color = 'white';
-      div.style.borderColor = 'rgba(58,138,92,0.3)';
-      div.querySelector('span').style.color = 'var(--text)';
-    } else {
-      chk.textContent = '';
-      chk.style.background = 'transparent';
-      chk.style.borderColor = 'var(--border2)';
-      div.style.borderColor = 'var(--border)';
-      div.querySelector('span').style.color = 'var(--muted)';
+  <script>
+    let scale = 1;
+    const canvas = document.getElementById('canvas');
+    function zoomIn() { scale = Math.min(scale + 0.15, 2); canvas.style.transform = 'scale(' + scale + ')'; }
+    function zoomOut() { scale = Math.max(scale - 0.15, 0.4); canvas.style.transform = 'scale(' + scale + ')'; }
+    function resetZoom() { scale = 1; canvas.style.transform = 'scale(1)'; }
+    const details = {
+  "web": {
+    "title": "Web Application",
+    "subtitle": "Primary user interface built with Next.js 16 App Router, Tailwind CSS 4, and Zustand state management.",
+    "tech": [
+      "Next.js 16",
+      "Tailwind CSS 4",
+      "Zustand",
+      "TypeScript",
+      "ShadCN UI",
+      "Framer Motion"
+    ],
+    "routes": [
+      "/",
+      "/jobs",
+      "/companies",
+      "/ai",
+      "/profile",
+      "/messages"
+    ]
+  },
+  "mobile": {
+    "title": "Mobile Applications",
+    "subtitle": "Native iOS and Android shells powered by Capacitor.",
+    "tech": [
+      "Capacitor 8",
+      "iOS (Swift)",
+      "Android (Kotlin)",
+      "Push Notifications"
+    ],
+    "routes": []
+  },
+  "pwa": {
+    "title": "PWA Service Worker",
+    "subtitle": "Serwist-powered service worker providing offline caching and push notifications.",
+    "tech": [
+      "Serwist 9",
+      "Workbox",
+      "CacheFirst",
+      "NetworkFirst"
+    ],
+    "routes": []
+  },
+  "public": {
+    "title": "Public Pages",
+    "subtitle": "15 publicly accessible pages.",
+    "tech": [
+      "SSR",
+      "SEO Optimized",
+      "Open Graph"
+    ],
+    "routes": [
+      "/about",
+      "/companies/[id]",
+      "/companies",
+      "/contact",
+      "/for-recruiters",
+      "/founder",
+      "/govt-jobs",
+      "/help",
+      "/investor",
+      "/jobs/[id]/apply/screening",
+      "/jobs/[id]",
+      "/jobs",
+      "/privacy",
+      "/safety",
+      "/terms"
+    ]
+  },
+  "auth": {
+    "title": "Auth Portal",
+    "subtitle": "3 authentication pages.",
+    "tech": [
+      "JWT",
+      "OAuth 2.0",
+      "TOTP 2FA",
+      "HTTP-Only Cookies"
+    ],
+    "routes": [
+      "/(auth)/login/2fa",
+      "/(auth)/login",
+      "/(auth)/register"
+    ]
+  },
+  "seeker": {
+    "title": "Job Seeker Workspace",
+    "subtitle": "7 seeker workspace pages.",
+    "tech": [
+      "Dashboard",
+      "Resume Builder",
+      "AI Tools",
+      "Saved Searches"
+    ],
+    "routes": [
+      "/dashboard/seeker",
+      "/dashboard/seeker/saved-searches",
+      "/dashboard/seeker/workspace",
+      "/messages",
+      "/network",
+      "/profile/[id]",
+      "/profile"
+    ]
+  },
+  "recruiter": {
+    "title": "Recruiter Workspace",
+    "subtitle": "5 recruiter workspace pages.",
+    "tech": [
+      "AI Screener",
+      "JD Generator",
+      "Talent Pools",
+      "Outreach Templates"
+    ],
+    "routes": [
+      "/dashboard/recruiter/analytics",
+      "/dashboard/recruiter/automation",
+      "/dashboard/recruiter/interviews",
+      "/dashboard/recruiter",
+      "/dashboard/recruiter/workspace"
+    ]
+  },
+  "admin": {
+    "title": "Admin Control Center",
+    "subtitle": "3 admin pages.",
+    "tech": [
+      "User Management",
+      "Review Moderation",
+      "Job Audits",
+      "Analytics"
+    ],
+    "routes": [
+      "/dashboard/admin",
+      "/dashboard/analytics",
+      "/dashboard/assessments"
+    ]
+  },
+  "middleware": {
+    "title": "Next.js Middleware",
+    "subtitle": "Edge middleware for route protection, rate limiting, and CORS.",
+    "tech": [
+      "Edge Runtime",
+      "Route Guards",
+      "CORS",
+      "CSP Headers"
+    ],
+    "routes": []
+  },
+  "jwt": {
+    "title": "JWT Authentication",
+    "subtitle": "Stateless auth using jose with HTTP-only secure cookies and optional TOTP 2FA.",
+    "tech": [
+      "jose",
+      "HTTP-Only Cookies",
+      "TOTP 2FA",
+      "bcryptjs"
+    ],
+    "routes": []
+  },
+  "authApi": {
+    "title": "Auth API",
+    "subtitle": "15 authentication endpoints.",
+    "tech": [
+      "JWT Tokens",
+      "Google OAuth",
+      "GitHub OAuth",
+      "LinkedIn OAuth"
+    ],
+    "routes": [
+      "/api/auth/2fa/disable",
+      "/api/auth/2fa/generate",
+      "/api/auth/2fa/validate",
+      "/api/auth/2fa/verify",
+      "/api/auth/agreement",
+      "/api/auth/callback/[provider]",
+      "/api/auth/delete",
+      "/api/auth/github",
+      "/api/auth/github/callback",
+      "/api/auth/google",
+      "/api/auth/google/callback",
+      "/api/auth/linkedin",
+      "/api/auth/linkedin/callback",
+      "/api/auth/logout",
+      "/api/auth/me"
+    ]
+  },
+  "aiApi": {
+    "title": "AI Recruiter Suite",
+    "subtitle": "17 AI-powered endpoints.",
+    "tech": [
+      "OpenAI API",
+      "Candidate Sorter",
+      "JD Generator",
+      "Resume Parser"
+    ],
+    "routes": [
+      "/api/ai/candidate-screener",
+      "/api/ai/candidate-screener/scan",
+      "/api/ai/candidate-screener/talent-pool",
+      "/api/ai/career-advisor",
+      "/api/ai/cover-letter",
+      "/api/ai/github-agent",
+      "/api/ai/interview-guide",
+      "/api/ai/interview-prep",
+      "/api/ai/jd-generator",
+      "/api/ai/jobs/[id]",
+      "/api/ai/outreach-generator",
+      "/api/ai/parse-resume",
+      "/api/ai/recruiter-copilot",
+      "/api/ai/resume-analyzer",
+      "/api/ai/resume-job-match",
+      "/api/ai/screening",
+      "/api/ai/skill-gap"
+    ],
+    "connections": [
+      "Azure",
+      "LLM",
+      "Postgres",
+      "Queue",
+      "Redis",
+      "SMTP"
+    ]
+  },
+  "coreApi": {
+    "title": "Core Application API",
+    "subtitle": "49 core platform endpoints.",
+    "tech": [
+      "Prisma ORM",
+      "Full-Text Search",
+      "Pagination",
+      "File Uploads"
+    ],
+    "routes": [
+      "/api/activity/recent",
+      "/api/analytics/salary",
+      "/api/autocomplete",
+      "/api/blocks",
+      "/api/candidates/search",
+      "/api/companies",
+      "/api/companies/[id]",
+      "/api/companies/[id]/claim",
+      "/api/companies/[id]/reviews",
+      "/api/companies/logo-proxy",
+      "/api/connections/list",
+      "/api/connections/respond",
+      "/api/connections/send",
+      "/api/cover-letter/pdf",
+      "/api/crm/automation",
+      "/api/crm/automation/[id]",
+      "/api/crm/candidates/bulk",
+      "/api/dashboard/recruiter",
+      "/api/dashboard/seeker",
+      "/api/health",
+      "/api/internal/phone-otp/pending",
+      "/api/interviews",
+      "/api/jobs",
+      "/api/jobs/[id]",
+      "/api/jobs/[id]/apply",
+      "/api/jobs/[id]/report-salary",
+      "/api/jobs/[id]/save",
+      "/api/jobs/recommended",
+      "/api/messages",
+      "/api/messages/[userId]",
+      "/api/messages/stream",
+      "/api/notifications",
+      "/api/notifications/device",
+      "/api/notifications/read",
+      "/api/profile/[id]",
+      "/api/profile/resume",
+      "/api/reports",
+      "/api/resume/compile",
+      "/api/reviews/verify-email/confirm",
+      "/api/reviews/verify-email/send",
+      "/api/saved-searches",
+      "/api/saved-searches/[id]",
+      "/api/search",
+      "/api/seed",
+      "/api/stats/platform",
+      "/api/stream",
+      "/api/upload",
+      "/api/users",
+      "/api/workflow"
+    ],
+    "connections": [
+      "Azure",
+      "Firebase",
+      "LLM",
+      "Postgres",
+      "Queue",
+      "Redis",
+      "SMTP"
+    ]
+  },
+  "adminApi": {
+    "title": "Admin Operations",
+    "subtitle": "8 admin endpoints.",
+    "tech": [
+      "Role-Based Access",
+      "Audit Logs",
+      "Bulk Actions"
+    ],
+    "routes": [
+      "/api/admin/companies/[id]/logo",
+      "/api/admin/fetch-jobs",
+      "/api/admin/jobs/[id]",
+      "/api/admin/migrate-ats",
+      "/api/admin/moderation",
+      "/api/admin/reviews/[id]",
+      "/api/admin/users",
+      "/api/admin/users/[id]"
+    ]
+  },
+  "cronApi": {
+    "title": "Cron Scheduler",
+    "subtitle": "6 scheduled job endpoints.",
+    "tech": [
+      "Daily Schedule",
+      "Weekly Schedule",
+      "BullMQ"
+    ],
+    "routes": [
+      "/api/cron/application-reminders",
+      "/api/cron/archive-jobs",
+      "/api/cron/daily-match",
+      "/api/cron/fetch-jobs",
+      "/api/cron/job-alerts",
+      "/api/cron/profile-nudges"
+    ]
+  },
+  "bullmq": {
+    "title": "BullMQ Queue",
+    "subtitle": "Distributed job queue with retry logic.",
+    "tech": [
+      "BullMQ 5",
+      "Redis-backed",
+      "Retry Logic",
+      "Priorities"
+    ],
+    "routes": []
+  },
+  "redis": {
+    "title": "Redis Cache",
+    "subtitle": "In-memory store for queues, sessions, and rate limits.",
+    "tech": [
+      "ioredis",
+      "Redis 6",
+      "Cache-Aside",
+      "Pub/Sub"
+    ],
+    "routes": []
+  },
+  "worker": {
+    "title": "Background Worker",
+    "subtitle": "Long-running process for emails, scrapers, and notifications.",
+    "tech": [
+      "tsx Runtime",
+      "BullMQ Consumer",
+      "Email Sending",
+      "Job Scraping"
+    ],
+    "routes": []
+  },
+  "prisma": {
+    "title": "Prisma ORM",
+    "subtitle": "Type-safe database client with migrations and seeding.",
+    "tech": [
+      "Prisma 5",
+      "Type-Safe Queries",
+      "Migrations",
+      "Seeding"
+    ],
+    "routes": []
+  },
+  "postgres": {
+    "title": "PostgreSQL Database",
+    "subtitle": "Primary relational database for all platform data.",
+    "tech": [
+      "PostgreSQL",
+      "Full-Text Search",
+      "JSONB",
+      "Indexes"
+    ],
+    "routes": []
+  },
+  "llm": {
+    "title": "LLM AI Engine",
+    "subtitle": "OpenAI-powered language model for resume parsing and matching.",
+    "tech": [
+      "OpenAI API",
+      "GPT-4",
+      "Structured Output",
+      "Streaming"
+    ],
+    "routes": []
+  },
+  "azure": {
+    "title": "Azure Blob Storage",
+    "subtitle": "Cloud storage for PDF resumes and file assets.",
+    "tech": [
+      "Azure Storage SDK",
+      "Blob Containers",
+      "SAS Tokens"
+    ],
+    "routes": []
+  },
+  "firebase": {
+    "title": "Firebase FCM",
+    "subtitle": "Push notification service for web and mobile.",
+    "tech": [
+      "Firebase Admin SDK",
+      "FCM",
+      "Topic Messaging"
+    ],
+    "routes": []
+  },
+  "smtp": {
+    "title": "SMTP Mail Server",
+    "subtitle": "Transactional email for alerts, reminders, and OTP.",
+    "tech": [
+      "Nodemailer",
+      "HTML Templates",
+      "DKIM",
+      "SPF"
+    ],
+    "routes": []
+  }
+};
+    function showDetail(key) {
+      const d = details[key]; if (!d) return;
+      document.getElementById('detailTitle').textContent = d.title;
+      document.getElementById('detailSubtitle').textContent = d.subtitle;
+      let html = '';
+      if (d.tech && d.tech.length) {
+        html += '<div class="detail-section"><h3>Technology Stack</h3><div class="tech-tags">';
+        d.tech.forEach(function(t) { html += '<span class="tech-tag">' + t + '</span>'; });
+        html += '</div></div>';
+      }
+      if (d.routes && d.routes.length) {
+        html += '<div class="detail-section"><h3>Endpoints / Routes (' + d.routes.length + ')</h3><ul class="route-list">';
+        d.routes.forEach(function(r) { html += '<li>' + r + '</li>'; });
+        html += '</ul></div>';
+      }
+      document.getElementById('detailContent').innerHTML = html;
+      document.getElementById('detailPanel').classList.add('open');
     }
-  };
-  cl.appendChild(div);
-});
-
-// Smooth reveal on scroll
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if(e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }
-  });
-}, { threshold: 0.1 });
-document.querySelectorAll('section').forEach(s => {
-  s.style.opacity = '0';
-  s.style.transform = 'translateY(24px)';
-  s.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-  observer.observe(s);
-});
-// Show hero immediately
-document.getElementById('hero').style.opacity = '1';
-document.getElementById('hero').style.transform = 'none';
-</script>
+    function closeDetail() { document.getElementById('detailPanel').classList.remove('open'); }
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeDetail(); });
+    document.getElementById('canvasWrapper').addEventListener('wheel', function(e) {
+      if (e.ctrlKey || e.metaKey) { e.preventDefault(); if (e.deltaY < 0) zoomIn(); else zoomOut(); }
+    }, { passive: false });
+  </script>
 </body>
 </html>
